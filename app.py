@@ -107,7 +107,7 @@ if not is_authed and not is_admin_authed:
             "系統授權碼", type="password", placeholder="請輸入系統授權碼...", key="login_key_box"
         )
 
-        # 標準單一主按鈕（已完全拔除多餘的申請按鈕與對話框）
+        # 乾淨的正版單一按鈕，已徹底移除右側的申請權限按鈕
         btn_auth = st.button("進入系統", type="primary", use_container_width=True)
 
         if btn_auth:
