@@ -34,6 +34,11 @@ st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 # ---------------------------------------------------------
 # 權限申請彈出視窗對話框 (Dialog - 原汁原味完美版)
 # ---------------------------------------------------------
+import time  # 確保檔案頂部或函式內有載入 time 模組
+
+# ---------------------------------------------------------
+# 權限申請彈出視窗對話框 (Dialog - 修正訊息閃退版)
+# ---------------------------------------------------------
 @st.dialog("申請系統使用權限")
 def show_apply_permission_dialog():
     st.markdown(
@@ -74,14 +79,17 @@ def show_apply_permission_dialog():
                 )
                 success, msg = send_admin_email(req_unit, clean_emp, clean_name, req_reason)
 
+            # 顯示成功提示
             if success:
                 st.success("申請已成功送出！請靜候開通")
             else:
                 st.success("申請已成功登錄！(已登記於系統，可聯繫管理員)")
 
+            # ⏱️ 停留 1.5 秒讓使用者看清楚訊息，再關閉視窗與重新整理
+            time.sleep(1.5)
+
             st.session_state["show_apply_dialog"] = False
             st.rerun()
-
 
 # ---------------------------------------------------------
 # Session State 初始化
