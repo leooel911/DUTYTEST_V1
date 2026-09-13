@@ -31,12 +31,14 @@ st.set_page_config(
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 權限申請視窗 (改用自訂置中容器，解決原生 dialog 閃退與訊息閃逝問題)
+# 權限申請視窗 (改用狀態機分流，徹底解決元件衝突閃退問題)
 # ---------------------------------------------------------
 def show_apply_permission_dialog():
-    # 初始化對話框內的送出成功狀態
-    if "apply_submitted_msg" not in st.session_state:
-        st.session_state["apply_submitted_msg"] = None
+    # 初始化步驟狀態 ("form" 代表填寫表單, "success" 代表顯示成功結果)
+    if "apply_dialog_step" not in st.session_state:
+        st.session_state["apply_dialog_step"] = "form"
+    if "apply_result_msg" not in st.session_state:
+        st.session_state["apply_result_msg"] = ""
 
     st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
     
@@ -53,41 +55,40 @@ def show_apply_permission_dialog():
             unsafe_allow_html=True,
         )
 
-        # 如果已經送出成功，改顯示成功訊息與關閉按鈕
-        if st.session_state["apply_submitted_msg"]:
-            st.success(st.session_state["apply_submitted_msg"])
+        # 狀態 A：如果已經成功送出，顯示成功畫面與關閉按鈕
+        if st.session_state["apply_dialog_step"] == "success":
+            st.success(st.session_state["apply_result_msg"])
             st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
             if st.button("我知道了，關閉視窗", type="primary", use_container_width=True, key="btn_close_success_modal"):
-                st.session_state["apply_submitted_msg"] = None
-                st.session_state["show_apply_dialog"] = False
-                st.rerun()
-            st.markdown("</div>", unsafe_allow_html=True)
-            return
-
-        req_unit = st.selectbox("選擇所屬單位", ["TTN", "TTC", "TTS", "其他單位"], key="dlg_req_unit")
-        req_emp_id = st.text_input("使用者員編 (例如: A023300)", key="dlg_req_emp_id")
-        req_name = st.text_input("真實姓名 (例如: 波莉)", key="dlg_req_name")
-        req_reason = st.text_area("備註 (選填)", key="dlg_req_reason", help="說明用途可加速審核")
-
-        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
-        col_sub1, col_sub2 = st.columns([1, 1])
-        with col_sub1:
-            submit_clicked = st.button("確認送出申請", type="primary", use_container_width=True, key="btn_submit_apply_modal")
-        with col_sub2:
-            if st.button("關閉視窗", use_container_width=True, key="btn_cancel_apply_modal"):
+                st.session_state["apply_dialog_step"] = "form"
+                st.session_state["apply_result_msg"] = ""
                 st.session_state["show_apply_dialog"] = False
                 st.rerun()
 
-        st.markdown("</div>", unsafe_allow_html=True)
+        # 狀態 B：如果還在填寫中，顯示輸入表單
+        else:
+            req_unit = st.selectbox("選擇所屬單位", ["TTN", "TTC", "TTS", "其他單位"], key="dlg_req_unit")
+            req_emp_id = st.text_input("使用者員編 (例如: A023300)", key="dlg_req_emp_id")
+            req_name = st.text_input("真實姓名 (例如: 波莉)", key="dlg_req_name")
+            req_reason = st.text_area("備註 (選填)", key="dlg_req_reason", help="說明用途可加速審核")
 
-        if submit_clicked:
-            clean_emp = req_emp_id.strip().upper()
-            clean_name = req_name.strip()
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+            col_sub1, col_sub2 = st.columns([1, 1])
+            with col_sub1:
+                submit_clicked = st.button("確認送出申請", type="primary", use_container_width=True, key="btn_submit_apply_modal")
+            with col_sub2:
+                if st.button("關閉視窗", use_container_width=True, key="btn_cancel_apply_modal"):
+                    st.session_state["show_apply_dialog"] = False
+                    st.rerun()
 
-            if not clean_emp or not clean_name:
-                st.warning("請完整填寫「員編」與「姓名」！")
-            else:
-                with st.spinner("正在記錄申請並通知管理者..."):
+            if submit_clicked:
+                clean_emp = req_emp_id.strip().upper()
+                clean_name = req_name.strip()
+
+                if not clean_emp or not clean_name:
+                    st.warning("請完整填寫「員編」與「姓名」！")
+                else:
+                    success = True
                     try:
                         # 1. 記錄活動日誌
                         log_activity(
@@ -96,18 +97,25 @@ def show_apply_permission_dialog():
                             user=clean_emp,
                             unit=req_unit,
                         )
-                        # 2. 發送通知信
-                        success, msg = send_admin_email(req_unit, clean_emp, clean_name, req_reason)
+                        # 2. 發送通知信 (包在 try 內防止網路或郵件伺服器例外崩潰)
+                        res = send_admin_email(req_unit, clean_emp, clean_name, req_reason)
+                        if isinstance(res, tuple):
+                            success, _ = res
+                        elif res is False:
+                            success = False
                     except Exception as e:
                         success = False
-                        msg = str(e)
 
-                if success:
-                    st.session_state["apply_submitted_msg"] = "申請已成功送出！請靜候開通"
-                else:
-                    st.session_state["apply_submitted_msg"] = "申請已成功登錄！(已登記於系統，可聯繫管理員)"
-                
-                st.rerun()
+                    if success:
+                        st.session_state["apply_result_msg"] = "申請已成功送出！請靜候開通"
+                    else:
+                        st.session_state["apply_result_msg"] = "申請已成功登錄系統！(註：通知信發送遭遇狀況，建議直接聯繫管理員)"
+                    
+                    # 切換至成功狀態，觸發重新整理
+                    st.session_state["apply_dialog_step"] = "success"
+                    st.rerun()
+
+        st.markdown("</div>", unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # Session State 初始化
@@ -196,6 +204,7 @@ if not is_authed and not is_admin_authed:
 
         if btn_apply:
             st.session_state["show_apply_dialog"] = True
+            st.session_state["apply_dialog_step"] = "form"  # 確保每次打開都是表單
             st.rerun()
 
         if btn_auth:
