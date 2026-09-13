@@ -31,69 +31,77 @@ st.set_page_config(
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 權限申請彈出視窗對話框 (Dialog - 狀態切換互動版)
+# 權限申請視窗 (改用自訂置中容器，解決原生 dialog 閃退問題)
 # ---------------------------------------------------------
-@st.dialog("申請系統使用權限")
 def show_apply_permission_dialog():
     # 初始化對話框內的送出成功狀態
     if "apply_submitted_msg" not in st.session_state:
         st.session_state["apply_submitted_msg"] = None
 
-    # 如果已經送出成功，改顯示成功訊息與「確定」按鈕，讓使用者有時間看
-    if st.session_state["apply_submitted_msg"]:
-        st.success(st.session_state["apply_submitted_msg"])
+    st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
+    
+    # 建立一個美觀的置中外框卡片
+    with st.container():
+        st.markdown(
+            """
+            <div style="background-color: #1E293B; padding: 24px; border-radius: 12px; border: 1px solid #334155; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+                <div style="font-size: 18px; font-weight: 700; color: #F8FAFC; margin-bottom: 6px;">📋 申請系統使用權限</div>
+                <div style="font-size: 13px; color: #94A3B8; margin-bottom: 16px;">
+                    請填寫基本資料，送出後系統將自動發送通知信給管理員進行審核與開通。
+                </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        # 如果已經送出成功，改顯示成功訊息與關閉按鈕
+        if st.session_state["apply_submitted_msg"]:
+            st.success(st.session_state["apply_submitted_msg"])
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+            if st.button("我知道了，關閉視窗", type="primary", use_container_width=True, key="btn_close_success_modal"):
+                st.session_state["apply_submitted_msg"] = None
+                st.session_state["show_apply_dialog"] = False
+                st.rerun()
+            st.markdown("</div>", unsafe_allow_html=True)
+            return
+
+        req_unit = st.selectbox("選擇所屬單位", ["TTN", "TTC", "TTS", "其他單位"], key="dlg_req_unit")
+        req_emp_id = st.text_input("使用者員編 (例如: A023300)", key="dlg_req_emp_id")
+        req_name = st.text_input("真實姓名 (例如: 波莉)", key="dlg_req_name")
+        req_reason = st.text_area("備註 (選填)", key="dlg_req_reason", help="說明用途可加速審核")
+
         st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
-        if st.button("我知道了，關閉視窗", type="primary", use_container_width=True):
-            st.session_state["apply_submitted_msg"] = None
-            st.session_state["show_apply_dialog"] = False
-            st.rerun()
-        return  # 攔截後續程式碼，不顯示表單
+        col_sub1, col_sub2 = st.columns([1, 1])
+        with col_sub1:
+            submit_clicked = st.button("確認送出申請", type="primary", use_container_width=True, key="btn_submit_apply_modal")
+        with col_sub2:
+            if st.button("關閉視窗", use_container_width=True, key="btn_cancel_apply_modal"):
+                st.session_state["show_apply_dialog"] = False
+                st.rerun()
 
-    st.markdown(
-        """
-        <div style="font-size: 13px; color: #94A3B8; margin-bottom: 12px;">
-            請填寫基本資料，送出後系統將自動發送通知信給管理員進行審核與開通。
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+        st.markdown("</div>", unsafe_allow_html=True)
 
-    req_unit = st.selectbox("選擇所屬單位", ["TTN", "TTC", "TTS", "其他單位"], key="dlg_req_unit")
-    req_emp_id = st.text_input("使用者員編 (例如: A023300)", key="dlg_req_emp_id")
-    req_name = st.text_input("真實姓名 (例如: 波莉)", key="dlg_req_name")
-    req_reason = st.text_area("備註 (選填)", key="dlg_req_reason", help="說明用途可加速審核")
+        if submit_clicked:
+            clean_emp = req_emp_id.strip().upper()
+            clean_name = req_name.strip()
 
-    col_sub1, col_sub2 = st.columns([1, 1])
-    with col_sub1:
-        submit_clicked = st.button("確認送出申請", type="primary", use_container_width=True)
-    with col_sub2:
-        if st.button("關閉視窗", use_container_width=True):
-            st.session_state["show_apply_dialog"] = False
-            st.rerun()
-
-    if submit_clicked:
-        clean_emp = req_emp_id.strip().upper()
-        clean_name = req_name.strip()
-
-        if not clean_emp or not clean_name:
-            st.warning("請完整填寫「員編」與「姓名」！")
-        else:
-            with st.spinner("正在記錄申請並通知管理者..."):
-                log_activity(
-                    action="權限申請",
-                    detail=f"單位:{req_unit} | 員編:{clean_emp} | 姓名:{clean_name} | 備註:{req_reason}",
-                    user=clean_emp,
-                    unit=req_unit,
-                )
-                success, msg = send_admin_email(req_unit, clean_emp, clean_name, req_reason)
-
-            # 將成功訊息存入 session，觸發對話框切換成「成功畫面」
-            if success:
-                st.session_state["apply_submitted_msg"] = "申請已成功送出！請靜候開通"
+            if not clean_emp or not clean_name:
+                st.warning("請完整填寫「員編」與「姓名」！")
             else:
-                st.session_state["apply_submitted_msg"] = "申請已成功登錄！(已登記於系統，可聯繫管理員)"
-            
-            st.rerun()
+                with st.spinner("正在記錄申請並通知管理者..."):
+                    log_activity(
+                        action="權限申請",
+                        detail=f"單位:{req_unit} | 員編:{clean_emp} | 姓名:{clean_name} | 備註:{req_reason}",
+                        user=clean_emp,
+                        unit=req_unit,
+                    )
+                    success, msg = send_admin_email(req_unit, clean_emp, clean_name, req_reason)
+
+                if success:
+                    st.session_state["apply_submitted_msg"] = "申請已成功送出！請靜候開通"
+                else:
+                    st.session_state["apply_submitted_msg"] = "申請已成功登錄！(已登記於系統，可聯繫管理員)"
+                
+                st.rerun()
 
 # ---------------------------------------------------------
 # Session State 初始化
