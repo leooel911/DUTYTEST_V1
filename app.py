@@ -30,17 +30,25 @@ st.set_page_config(
 )
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
-
 # ---------------------------------------------------------
-# 權限申請彈出視窗對話框 (Dialog - 原汁原味完美版)
-# ---------------------------------------------------------
-import time  # 確保檔案頂部或函式內有載入 time 模組
-
-# ---------------------------------------------------------
-# 權限申請彈出視窗對話框 (Dialog - 修正訊息閃退版)
+# 權限申請彈出視窗對話框 (Dialog - 狀態切換互動版)
 # ---------------------------------------------------------
 @st.dialog("申請系統使用權限")
 def show_apply_permission_dialog():
+    # 初始化對話框內的送出成功狀態
+    if "apply_submitted_msg" not in st.session_state:
+        st.session_state["apply_submitted_msg"] = None
+
+    # 如果已經送出成功，改顯示成功訊息與「確定」按鈕，讓使用者有時間看
+    if st.session_state["apply_submitted_msg"]:
+        st.success(st.session_state["apply_submitted_msg"])
+        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+        if st.button("我知道了，關閉視窗", type="primary", use_container_width=True):
+            st.session_state["apply_submitted_msg"] = None
+            st.session_state["show_apply_dialog"] = False
+            st.rerun()
+        return  # 攔截後續程式碼，不顯示表單
+
     st.markdown(
         """
         <div style="font-size: 13px; color: #94A3B8; margin-bottom: 12px;">
@@ -79,16 +87,12 @@ def show_apply_permission_dialog():
                 )
                 success, msg = send_admin_email(req_unit, clean_emp, clean_name, req_reason)
 
-            # 顯示成功提示
+            # 將成功訊息存入 session，觸發對話框切換成「成功畫面」
             if success:
-                st.success("申請已成功送出！請靜候開通")
+                st.session_state["apply_submitted_msg"] = "申請已成功送出！請靜候開通"
             else:
-                st.success("申請已成功登錄！(已登記於系統，可聯繫管理員)")
-
-            # ⏱️ 停留 1.5 秒讓使用者看清楚訊息，再關閉視窗與重新整理
-            time.sleep(1.5)
-
-            st.session_state["show_apply_dialog"] = False
+                st.session_state["apply_submitted_msg"] = "申請已成功登錄！(已登記於系統，可聯繫管理員)"
+            
             st.rerun()
 
 # ---------------------------------------------------------
