@@ -187,7 +187,7 @@ if not is_authed and not is_admin_authed:
 
         if btn_apply:
             st.session_state["show_apply_dialog"] = True
-            st.session_state["apply_dialog_step"] = "form"  # 確保每次打開都是表單
+            st.session_state["apply_success_state"] = False  # 確保每次打開都是乾淨的表單
             st.rerun()
 
         if btn_auth:
