@@ -31,86 +31,6 @@ st.set_page_config(
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 權限申請專屬卡片視窗 (穩定容器版，絕不閃退)
-# ---------------------------------------------------------
-def show_apply_permission_dialog():
-    if "apply_step" not in st.session_state:
-        st.session_state["apply_step"] = "form"
-    if "apply_msg" not in st.session_state:
-        st.session_state["apply_msg"] = ""
-
-    st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
-    
-    # 建立置中容器卡片
-    with st.container():
-        st.markdown(
-            """
-            <div style="background-color: #1E293B; padding: 22px; border-radius: 12px; border: 1px solid #38BDF8; box-shadow: 0 10px 25px rgba(0,0,0,0.5); margin-bottom: 15px;">
-                <div style="font-size: 18px; font-weight: 700; color: #F8FAFC; margin-bottom: 6px;">📋 申請系統使用權限</div>
-                <div style="font-size: 13px; color: #94A3B8; margin-bottom: 16px;">
-                    請填寫基本資料，送出後系統將自動發送通知信給管理員進行審核與開通。
-                </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-        # 狀態 1：顯示成功訊息與關閉按鈕
-        if st.session_state["apply_step"] == "done":
-            st.success(st.session_state["apply_msg"])
-            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
-            if st.button("我知道了，關閉視窗", type="primary", use_container_width=True, key="btn_close_apply_box"):
-                st.session_state["apply_step"] = "form"
-                st.session_state["apply_msg"] = ""
-                st.session_state["show_apply_dialog"] = False
-                st.rerun()
-            st.markdown("</div>", unsafe_allow_html=True)
-            return
-
-        # 狀態 2：填寫表單
-        req_unit = st.selectbox("選擇所屬單位", ["TTN", "TTC", "TTS", "其他單位"], key="dlg_req_unit")
-        req_emp_id = st.text_input("使用者員編 (例如: A023300)", key="dlg_req_emp_id")
-        req_name = st.text_input("真實姓名 (例如: 波莉)", key="dlg_req_name")
-        req_reason = st.text_area("備註 (選填)", key="dlg_req_reason", help="說明用途可加速審核")
-
-        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
-        col_s1, col_s2 = st.columns([1, 1])
-        with col_s1:
-            submit_clicked = st.button("確認送出申請", type="primary", use_container_width=True, key="btn_submit_apply_box")
-        with col_s2:
-            if st.button("取消關閉", use_container_width=True, key="btn_cancel_apply_box"):
-                st.session_state["show_apply_dialog"] = False
-                st.rerun()
-
-        st.markdown("</div>", unsafe_allow_html=True)
-
-        if submit_clicked:
-            clean_emp = req_emp_id.strip().upper()
-            clean_name = req_name.strip()
-
-            if not clean_emp or not clean_name:
-                st.warning("請完整填寫「員編」與「姓名」！")
-            else:
-                try:
-                    log_activity(
-                        action="權限申請",
-                        detail=f"單位:{req_unit} | 員編:{clean_emp} | 姓名:{clean_name} | 備註:{req_reason}",
-                        user=clean_emp,
-                        unit=req_unit,
-                    )
-                    res = send_admin_email(req_unit, clean_emp, clean_name, req_reason)
-                    success = res[0] if isinstance(res, tuple) else True
-                except Exception:
-                    success = True  # 即使郵件函式有狀況，也當作成功寫入以防中斷
-
-                if success:
-                    st.session_state["apply_msg"] = "申請已成功送出！請靜候管理者開通。"
-                else:
-                    st.session_state["apply_msg"] = "申請資料已登錄系統！(可直接聯繫管理員)"
-
-                st.session_state["apply_step"] = "done"
-                st.rerun()
-
-# ---------------------------------------------------------
 # Session State 初始化
 # ---------------------------------------------------------
 if "authenticated" not in st.session_state:
@@ -123,8 +43,6 @@ if "show_admin_login" not in st.session_state:
     st.session_state["show_admin_login"] = False
 if "show_feedback_dialog" not in st.session_state:
     st.session_state["show_feedback_dialog"] = False
-if "show_apply_dialog" not in st.session_state:
-    st.session_state["show_apply_dialog"] = False
 if "inspect_emp_target" not in st.session_state:
     st.session_state["inspect_emp_target"] = None
 if "nav_mode" not in st.session_state:
@@ -169,7 +87,7 @@ if not is_authed and not is_admin_authed:
                 <div style="color: #FBBF24; font-weight: 800; margin-bottom: 4px;">重要提醒與注意事項：</div>
                 1. <b>排班依據</b>：本系統班表僅供個人調假與換班快篩參考，<b>即時班表務必以公司官方公告為準</b>。<br>
                 2. <b>資訊安全</b>：班表相關資料屬內部營運資訊，<b>請勿外流授權碼與班表截圖</b>。<br>
-                3. <b>權限與回報</b>：尚無權限者請點選下方<b>「申請使用權限」</b>；登入後若發現資料有誤，請善用頁尾<b>「問題回報」</b>。
+                3. <b>權限與回報</b>：登入後若發現資料有誤，請善用頁尾<b>「問題回報」</b>。
             </div>
             """,
                 unsafe_allow_html=True,
@@ -189,20 +107,8 @@ if not is_authed and not is_admin_authed:
             "系統授權碼", type="password", placeholder="請輸入系統授權碼...", key="login_key_box"
         )
 
-        col_b1, col_b2 = st.columns([1, 1])
-        with col_b1:
-            btn_auth = st.button("進入系統", type="primary", use_container_width=True)
-        with col_b2:
-            btn_apply = st.button("申請使用權限", use_container_width=True)
+        btn_auth = st.button("進入系統", type="primary", use_container_width=True)
 
-        if btn_apply:
-            st.session_state["show_apply_dialog"] = True
-            st.session_state["apply_step"] = "form"  # 確保每次打開都是乾淨表單
-            st.rerun()
-
-        # 渲染申請卡片（放在登入框下方）
-        if st.session_state.get("show_apply_dialog", False):
-            show_apply_permission_dialog()
         if btn_auth:
             success, message, user_session = authenticate_user(selected_unit, entered_emp, entered_key)
             
@@ -235,9 +141,6 @@ if not is_authed and not is_admin_authed:
                 st.rerun()
             else:
                 st.error(f" 登入失敗：{message}")
-
-        if st.session_state.get("show_apply_dialog", False):
-            show_apply_permission_dialog()
 
     st.stop()
 
