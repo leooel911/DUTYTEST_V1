@@ -31,7 +31,7 @@ st.set_page_config(
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 權限申請視窗 (改用自訂置中容器，解決原生 dialog 閃退問題)
+# 權限申請視窗 (改用自訂置中容器，解決原生 dialog 閃退與訊息閃逝問題)
 # ---------------------------------------------------------
 def show_apply_permission_dialog():
     # 初始化對話框內的送出成功狀態
@@ -88,13 +88,19 @@ def show_apply_permission_dialog():
                 st.warning("請完整填寫「員編」與「姓名」！")
             else:
                 with st.spinner("正在記錄申請並通知管理者..."):
-                    log_activity(
-                        action="權限申請",
-                        detail=f"單位:{req_unit} | 員編:{clean_emp} | 姓名:{clean_name} | 備註:{req_reason}",
-                        user=clean_emp,
-                        unit=req_unit,
-                    )
-                    success, msg = send_admin_email(req_unit, clean_emp, clean_name, req_reason)
+                    try:
+                        # 1. 記錄活動日誌
+                        log_activity(
+                            action="權限申請",
+                            detail=f"單位:{req_unit} | 員編:{clean_emp} | 姓名:{clean_name} | 備註:{req_reason}",
+                            user=clean_emp,
+                            unit=req_unit,
+                        )
+                        # 2. 發送通知信
+                        success, msg = send_admin_email(req_unit, clean_emp, clean_name, req_reason)
+                    except Exception as e:
+                        success = False
+                        msg = str(e)
 
                 if success:
                     st.session_state["apply_submitted_msg"] = "申請已成功送出！請靜候開通"
