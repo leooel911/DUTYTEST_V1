@@ -1,6 +1,6 @@
 [theme]
-base = "dark"          # 固定使用深色模式（或改為 "light" 固定使用淺色模式）
-primaryColor = "#FF4B4B" # 主題色（例如紅色/藍色亮點）
-backgroundColor = "#0E1117" # 頁面背景色
-secondaryBackgroundColor = "#262730" # 側邊欄與卡片容器背景色
-textColor = "#FAFAFA"    # 全站預設文字顏色（確保為亮灰色/白色，避免變黑字）
+base = "dark"
+primaryColor = "#38BDF8"
+backgroundColor = "#0E1117"
+secondaryBackgroundColor = "#1E293B"
+textColor = "#F8FAFC"
