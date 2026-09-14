@@ -130,7 +130,7 @@ C_OT_TXT: str = "#EF4444"
 C_NOTE_TXT: str = "#4C1D95"
 C_TOWN_TXT: str = "#000000"
 
-# 全站專業級 CSS 美化樣式 (已修正輸入框底層白底問題)
+# 全站專業級 CSS 美化樣式 (已精準針對輸入框與下拉選單背景進行深色化)
 CUSTOM_CSS: str = """
 <style>
     header[data-testid="stHeader"] { background: transparent !important; }
@@ -182,36 +182,23 @@ CUSTOM_CSS: str = """
         font-family: monospace !important;
     }
 
-    /* 徹底修正輸入框、密碼框與下拉選單的白色背景 */
-    div[data-baseweb="input"], 
-    div[data-baseweb="base-input"],
-    div[data-baseweb="input"] > div,
-    div[data-baseweb="base-input"] > div {
+    /* ========================================================= */
+    /* 精準鎖定：徹底消除輸入框與下拉選單的白色背景底框 */
+    /* ========================================================= */
+    .stTextInput > div > div > div {
         background-color: #1E293B !important;
-        border-color: #475569 !important;
-        color: #F8FAFC !important;
+        border: 1px solid #475569 !important;
+        border-radius: 8px !important;
     }
     
-    div[data-baseweb="select"], 
-    div[data-baseweb="select"] > div {
+    .stSelectbox > div > div > div {
         background-color: #1E293B !important;
-        border-color: #475569 !important;
-        color: #F8FAFC !important;
-    }
-    
-    div[data-baseweb="select"] span, 
-    div[data-baseweb="select"] div {
-        color: #F8FAFC !important;
-    }
-    
-    div[data-baseweb="popover"] div {
-        background-color: #1E293B !important;
-        color: #F8FAFC !important;
+        border: 1px solid #475569 !important;
+        border-radius: 8px !important;
     }
 
     div[data-testid="stTextInput"] input,
-    div[data-testid="stTextArea"] textarea,
-    div[data-baseweb="base-input"] input {
+    div[data-testid="stTextArea"] textarea {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
@@ -222,93 +209,44 @@ CUSTOM_CSS: str = """
     }
     
     div[data-testid="stTextInput"] input::placeholder,
-    div[data-testid="stTextArea"] textarea::placeholder,
-    div[data-baseweb="base-input"] input::placeholder {
+    div[data-testid="stTextArea"] textarea::placeholder {
         color: #64748B !important;
         -webkit-text-fill-color: #64748B !important;
     }
     
-    div[data-testid="stTextInput"] div[data-baseweb="input"]:focus-within,
-    div[data-testid="stTextArea"] div[data-baseweb="textarea"]:focus-within,
-    div[data-baseweb="base-input"]:focus-within {
+    .stTextInput > div > div > div:focus-within,
+    .stSelectbox > div > div > div:focus-within {
         border-color: #38BDF8 !important;
         box-shadow: 0 0 12px rgba(56, 189, 248, 0.3) !important;
     }
 
-    div[data-baseweb="select"]:hover > div { border-color: #38BDF8 !important; }
-
-    div[data-testid="stElementContainer"]:has(div[data-testid="stRadio"]),
-    div[data-testid="stRadio"],
-    div[data-testid="stRadio"] > div,
-    div[data-testid="stRadio"] div[role="radiogroup"] {
-        width: 100% !important;
-        max-width: 100% !important;
-        display: flex !important;
-        flex-direction: column !important;
-        flex-wrap: nowrap !important;
-        align-items: stretch !important;
-        gap: 10px !important;
-    }
-
-    div[role="radiogroup"] label div[data-testid="stRadioButtonCustomIcon"],
-    div[role="radiogroup"] label input,
-    div[role="radiogroup"] label > div:first-child { display: none !important; }
-
-    div[role="radiogroup"] > label {
-        width: 100% !important;
-        flex: 1 1 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-        background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.85) 100%) !important;
-        border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        border-left: 4px solid #475569 !important;
-        border-radius: 10px !important;
-        padding: 14px 18px !important;
-        margin: 0 !important;
-        cursor: pointer !important;
-        transition: all 0.2s ease-in-out !important;
-        display: flex !important;
-        justify-content: flex-start !important;
-        align-items: center !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
-    }
-
-    div[role="radiogroup"] label p {
-        font-size: 14px !important;
-        font-weight: 700 !important;
-        color: #94A3B8 !important;
-        margin: 0 !important;
-        white-space: normal !important;
-        text-overflow: clip !important;
-        word-break: break-word !important;
-        line-height: 1.4 !important;
-        text-align: left !important;
-        width: 100% !important;
-        font-family: monospace !important;
-        letter-spacing: 0.5px !important;
-    }
-
-    div[role="radiogroup"] > label:hover {
-        background: linear-gradient(135deg, rgba(51, 65, 85, 0.85) 0%, rgba(30, 41, 59, 0.9) 100%) !important;
-        border-color: rgba(56, 189, 248, 0.4) !important;
-        border-left-color: #38BDF8 !important;
-    }
-    div[role="radiogroup"] > label:hover p {
+    /* 下拉選單展開後的彈出清單背景 */
+    div[data-baseweb="popover"] div {
+        background-color: #1E293B !important;
         color: #F8FAFC !important;
     }
 
-    div[role="radiogroup"] > label[data-checked="true"], 
-    div[role="radiogroup"] > label:has(input:checked) {
-        background: linear-gradient(135deg, rgba(30, 58, 138, 0.65) 0%, rgba(15, 23, 42, 0.9) 100%) !important;
-        border-color: #38BDF8 !important;
-        border-left-color: #38BDF8 !important;
-        box-shadow: 0 0 16px rgba(56, 189, 248, 0.3) !important;
+    div[data-baseweb="tab-list"] {
+        gap: 8px !important;
+        background: rgba(15, 23, 42, 0.6) !important;
+        padding: 6px !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(56, 189, 248, 0.25) !important;
     }
-
-    div[role="radiogroup"] > label[data-checked="true"] p,
-    div[role="radiogroup"] > label:has(input:checked) p {
-        color: #FFFFFF !important;
-        font-weight: 800 !important;
+    button[data-baseweb="tab"] {
+        border-radius: 8px !important;
+        color: #94A3B8 !important;
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        padding: 8px 18px !important;
+        background: transparent !important;
+        font-family: monospace !important;
+    }
+    button[aria-selected="true"] {
+        background: rgba(56, 189, 248, 0.25) !important;
+        color: #38BDF8 !important;
+        border: 1px solid rgba(56, 189, 248, 0.5) !important;
+        box-shadow: 0 0 10px rgba(56, 189, 248, 0.2) !important;
     }
 
     div[data-baseweb="slider"] div[role="slider"] {
@@ -354,30 +292,6 @@ CUSTOM_CSS: str = """
     .test-env-title { color: #FDE68A; font-size: 11.5px !important; font-weight: 800; letter-spacing: 1.2px; }
     .test-env-sub { color: #FCD34D; font-size: 10px !important; font-weight: 500; opacity: 0.9; margin-top: 2px; }
 
-    div.stButton > button[key*="btn_footer_feedback_left"],
-    div.stButton > button[key*="btn_footer_admin_right"] {
-        background: rgba(30, 41, 59, 0.6) !important;
-        border: 1px solid rgba(56, 189, 248, 0.3) !important;
-        color: #94A3B8 !important;
-        font-size: 11px !important;
-        font-weight: 600 !important;
-        border-radius: 20px !important;
-        padding: 4px 12px !important;
-        min-height: 34px !important;
-        height: 34px !important;
-        letter-spacing: 0.5px !important;
-        transition: all 0.25s ease !important;
-        box-shadow: none !important;
-        font-family: monospace !important;
-    }
-    div.stButton > button[key*="btn_footer_feedback_left"]:hover,
-    div.stButton > button[key*="btn_footer_admin_right"]:hover {
-        background: rgba(56, 189, 248, 0.2) !important;
-        border-color: #38BDF8 !important;
-        color: #38BDF8 !important;
-        box-shadow: 0 0 12px rgba(56, 189, 248, 0.3) !important;
-    }
-
     .section-header-box { 
         background: rgba(30, 41, 59, 0.6); 
         backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -421,29 +335,6 @@ CUSTOM_CSS: str = """
         border-color: #38BDF8 !important;
         color: #FFFFFF !important;
         box-shadow: 0 0 12px rgba(56, 189, 248, 0.25) !important;
-    }
-
-    div[data-baseweb="tab-list"] {
-        gap: 8px !important;
-        background: rgba(15, 23, 42, 0.6) !important;
-        padding: 6px !important;
-        border-radius: 12px !important;
-        border: 1px solid rgba(56, 189, 248, 0.25) !important;
-    }
-    button[data-baseweb="tab"] {
-        border-radius: 8px !important;
-        color: #94A3B8 !important;
-        font-weight: 700 !important;
-        font-size: 13px !important;
-        padding: 8px 18px !important;
-        background: transparent !important;
-        font-family: monospace !important;
-    }
-    button[aria-selected="true"] {
-        background: rgba(56, 189, 248, 0.25) !important;
-        color: #38BDF8 !important;
-        border: 1px solid rgba(56, 189, 248, 0.5) !important;
-        box-shadow: 0 0 10px rgba(56, 189, 248, 0.2) !important;
     }
 </style>
 """
