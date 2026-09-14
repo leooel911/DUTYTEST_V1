@@ -15,7 +15,7 @@ SYSTEM_CONFIG_FILE: str = os.path.join(DATA_DIR, "system_config.json")
 ALLOWED_USERS_FILE: str = os.path.join(DATA_DIR, "allowed_users.json")
 WHITELIST_FILE: str = os.path.join(DATA_DIR, "whitelist.json")
 
-# 各基地所屬單位班表與 Mapping 映射路徑設定 (對應你的最新版班表子資料夾架構)
+# 各基地所屬單位班表與 Mapping 映射路徑設定 (完整對應 TTN、TTC、TTS 的最新版班表結構)
 UNITS: Dict[str, Dict[str, Any]] = {
     "TTN": {
         "駕駛": os.path.join(DATA_DIR, "TTN", "最新版班表", "TTN_TD.xlsx"),
