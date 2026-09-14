@@ -130,7 +130,10 @@ C_OT_TXT: str = "#991B1B"
 C_NOTE_TXT: str = "#4C1D95"
 C_TOWN_TXT: str = "#000000"
 
-/* 修正文字輸入框與文字域的樣式 */
+CUSTOM_CSS = """
+/* 原有的其他 CSS 樣式... */
+
+/* 修復文字輸入框與文字域的樣式 */
 .stTextInput input, .stTextArea textarea {
     background-color: rgba(15, 23, 42, 0.75) !important;
     color: #F8FAFC !important;
@@ -142,6 +145,7 @@ div[data-testid="stTextArea"] div[data-baseweb="textarea"] {
     border: 1px solid rgba(56, 189, 248, 0.35) !important;
     border-radius: 10px !important;
 }
+"""
     
     .hours-badge {
         background: rgba(56, 189, 248, 0.15) !important;
