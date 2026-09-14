@@ -130,7 +130,7 @@ C_OT_TXT: str = "#EF4444"
 C_NOTE_TXT: str = "#4C1D95"
 C_TOWN_TXT: str = "#000000"
 
-# 全站專業級 CSS 美化樣式
+# 全站專業級 CSS 美化樣式（包含 Slider 顏色覆寫為藍色系）
 CUSTOM_CSS: str = """
 <style>
     header[data-testid="stHeader"] { background: transparent !important; }
@@ -294,6 +294,16 @@ CUSTOM_CSS: str = """
         font-weight: 800 !important;
     }
 
+    /* 覆寫 Slider 顏色改為藍色系 (#38BDF8)，移除原本主題的紅色 */
+    div[data-baseweb="slider"] div[role="slider"] {
+        background-color: #38BDF8 !important;
+        border-color: #38BDF8 !important;
+    }
+    div[data-baseweb="slider"] div[data-testid="stSliderBar"],
+    div[data-baseweb="slider"] div > div > div > div {
+        background-color: #38BDF8 !important;
+    }
+
     div[data-baseweb="slider"] {
         padding-top: 10px !important;
         padding-bottom: 10px !important;
@@ -353,53 +363,6 @@ CUSTOM_CSS: str = """
         box-shadow: 0 0 12px rgba(56, 189, 248, 0.3) !important;
     }
 
-    .admin-maint-banner {
-        border: 1px solid rgba(245, 158, 11, 0.6);
-        border-left: 5px solid #F59E0B;
-        border-radius: 10px;
-        padding: 10px 14px;
-        margin-bottom: 1rem;
-        background: rgba(245, 158, 11, 0.15);
-        backdrop-filter: blur(8px);
-        color: #FDE68A;
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-        font-family: monospace;
-    }
-
-    .user-maint-banner {
-        border: 1px solid rgba(245, 158, 11, 0.5);
-        border-left: 5px solid #F59E0B;
-        border-radius: 12px;
-        padding: 14px 18px;
-        margin-top: 12px;
-        margin-bottom: 16px;
-        background: radial-gradient(circle at 50% 0%, rgba(69, 41, 10, 0.7) 0%, rgba(24, 18, 11, 0.85) 100%);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-        text-align: center;
-    }
-    .user-maint-title {
-        color: #FDE68A;
-        font-size: 11.5px;
-        font-weight: 800;
-        letter-spacing: 1.2px;
-        font-family: monospace;
-        text-transform: uppercase;
-        margin-bottom: 4px;
-    }
-    .user-maint-sub {
-        color: #CBD5E1;
-        font-size: 11px;
-        font-weight: 500;
-        letter-spacing: 0.5px;
-        font-family: monospace;
-        margin-top: 4px;
-        opacity: 0.9;
-    }
-
     .section-header-box { 
         background: rgba(30, 41, 59, 0.6); 
         backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -408,41 +371,6 @@ CUSTOM_CSS: str = """
     .section-title { color: #F8FAFC; font-size: 14px !important; font-weight: 700; margin: 0; font-family: monospace; }
     .section-subtitle { color: #94A3B8; font-size: 10px !important; font-weight: 600; text-transform: uppercase; font-family: monospace; letter-spacing: 0.5px; }
 
-    .integrated-crew-box {
-        width: 100% !important;
-        box-sizing: border-box !important;
-        background: rgba(30, 41, 59, 0.8);
-        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(56, 189, 248, 0.3);
-        border-bottom: none !important;
-        border-left: 4px solid #10B981;
-        border-top-left-radius: 12px;
-        border-top-right-radius: 12px;
-        border-bottom-left-radius: 0px !important;
-        border-bottom-right-radius: 0px !important;
-        padding: 12px 14px 8px 14px;
-        margin-bottom: 0px !important;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
-    }
-    .integrated-crew-box:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45), 0 0 15px rgba(56, 189, 248, 0.2) !important;
-        border-color: rgba(56, 189, 248, 0.6) !important;
-    }
-
-    .compact-name {
-        font-size: 15px !important;
-        font-weight: 800 !important;
-        color: #F8FAFC !important;
-        font-family: monospace;
-    }
-    .badge-group {
-        display: flex;
-        gap: 6px;
-        align-items: center;
-        flex-wrap: wrap;
-    }
     .long-badge {
         background: rgba(239, 68, 68, 0.2) !important;
         color: #F87171 !important;
@@ -478,17 +406,6 @@ CUSTOM_CSS: str = """
         border-color: #38BDF8 !important;
         color: #FFFFFF !important;
         box-shadow: 0 0 12px rgba(56, 189, 248, 0.25) !important;
-    }
-
-    div.stButton > button[key*="win_btn_"],
-    div.stButton > button[key*="ex_btn_"] {
-        border-top-left-radius: 0px !important;
-        border-top-right-radius: 0px !important;
-        border-bottom-left-radius: 12px !important;
-        border-bottom-right-radius: 12px !important;
-        border-top: 1px dashed rgba(255, 255, 255, 0.1) !important;
-        background: rgba(15, 23, 42, 0.9) !important;
-        margin-top: 0px !important;
     }
 
     div[data-baseweb="tab-list"] {
