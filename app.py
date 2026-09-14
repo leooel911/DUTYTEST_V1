@@ -31,22 +31,39 @@ st.set_page_config(
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 質感深色模式：修正輸入框背景（絕不發白）、標題與提示字
+# 強制覆寫 Streamlit BaseWeb 元件：徹底消除白色輸入框
 # ---------------------------------------------------------
 st.markdown("""
 <style>
-    /* 調整所有輸入框、選單的標題文字顏色為清晰的亮灰色 */
+    /* 調整所有輸入框與選單的標題文字顏色 */
     .stTextInput label, .stSelectbox label, .stRadio label, .stDateInput label {
         color: #E2E8F0 !important;
         font-weight: 600 !important;
     }
     
-    /* 調整輸入框與下拉選單本體：沉穩深色背景 + 精緻邊框（拒絕白色！） */
-    .stTextInput input, .stSelectbox div[data-baseweb="select"] > div {
-        background-color: #0E1117 !important;
-        color: #F8FAFC !important;
-        border: 1px solid #334155 !important;
+    /* 強制修改 Streamlit 輸人框外層容器背景（消除白色） */
+    div[data-baseweb="input"] {
+        background-color: #1E293B !important;
         border-radius: 6px !important;
+        border: 1px solid #334155 !important;
+    }
+    
+    div[data-baseweb="input"] > div {
+        background-color: transparent !important;
+        color: #F8FAFC !important;
+    }
+    
+    /* 輸人框文字顏色 */
+    .stTextInput input {
+        color: #F8FAFC !important;
+        background-color: transparent !important;
+    }
+    
+    /* 下拉選單外層背景 */
+    div[data-baseweb="select"] > div {
+        background-color: #1E293B !important;
+        color: #F8FAFC !important;
+        border-color: #334155 !important;
     }
     
     /* 下拉選單展開後的選單背景與文字顏色 */
