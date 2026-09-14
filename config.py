@@ -113,7 +113,7 @@ LEAVE_CODES: List[str] = [
     "WRSL",
 ]
 
-# 班表圖像渲染色調定義 (已調整非正線與各項色彩對比)
+# 班表圖像渲染色調定義
 C_HDR: str = "#0F172A"
 C_BORDER: str = "#475569"
 C_EMPTY: str = "#F1F5F9"
@@ -121,14 +121,14 @@ C_WORK_BG: str = "#FFFFFF"
 C_WEEKEND_BG: str = "#F8FAFC"
 C_DO_BG: str = "#FFE4E6"
 C_PAY_BG: str = "#FFEDD5"
-C_TOWN_BG: str = "#E2E8F0"
+C_TOWN_BG: str = "#CBD5E1"
 
 C_DO_TXT: str = "#881337"
 C_PAY_TXT: str = "#9A3412"
 C_HOLI_TXT: str = "#7C2D12"
 C_OT_TXT: str = "#EF4444"
 C_NOTE_TXT: str = "#4C1D95"
-C_TOWN_TXT: str = "#0F172A"
+C_TOWN_TXT: str = "#000000"
 
 # 全站專業級 CSS 美化樣式
 CUSTOM_CSS: str = """
@@ -368,6 +368,38 @@ CUSTOM_CSS: str = """
         font-family: monospace;
     }
 
+    .user-maint-banner {
+        border: 1px solid rgba(245, 158, 11, 0.5);
+        border-left: 5px solid #F59E0B;
+        border-radius: 12px;
+        padding: 14px 18px;
+        margin-top: 12px;
+        margin-bottom: 16px;
+        background: radial-gradient(circle at 50% 0%, rgba(69, 41, 10, 0.7) 0%, rgba(24, 18, 11, 0.85) 100%);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        text-align: center;
+    }
+    .user-maint-title {
+        color: #FDE68A;
+        font-size: 11.5px;
+        font-weight: 800;
+        letter-spacing: 1.2px;
+        font-family: monospace;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+    }
+    .user-maint-sub {
+        color: #CBD5E1;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        font-family: monospace;
+        margin-top: 4px;
+        opacity: 0.9;
+    }
+
     .section-header-box { 
         background: rgba(30, 41, 59, 0.6); 
         backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -376,6 +408,41 @@ CUSTOM_CSS: str = """
     .section-title { color: #F8FAFC; font-size: 14px !important; font-weight: 700; margin: 0; font-family: monospace; }
     .section-subtitle { color: #94A3B8; font-size: 10px !important; font-weight: 600; text-transform: uppercase; font-family: monospace; letter-spacing: 0.5px; }
 
+    .integrated-crew-box {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        background: rgba(30, 41, 59, 0.8);
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        border-bottom: none !important;
+        border-left: 4px solid #10B981;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        border-bottom-left-radius: 0px !important;
+        border-bottom-right-radius: 0px !important;
+        padding: 12px 14px 8px 14px;
+        margin-bottom: 0px !important;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+    }
+    .integrated-crew-box:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45), 0 0 15px rgba(56, 189, 248, 0.2) !important;
+        border-color: rgba(56, 189, 248, 0.6) !important;
+    }
+
+    .compact-name {
+        font-size: 15px !important;
+        font-weight: 800 !important;
+        color: #F8FAFC !important;
+        font-family: monospace;
+    }
+    .badge-group {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
     .long-badge {
         background: rgba(239, 68, 68, 0.2) !important;
         color: #F87171 !important;
@@ -411,6 +478,17 @@ CUSTOM_CSS: str = """
         border-color: #38BDF8 !important;
         color: #FFFFFF !important;
         box-shadow: 0 0 12px rgba(56, 189, 248, 0.25) !important;
+    }
+
+    div.stButton > button[key*="win_btn_"],
+    div.stButton > button[key*="ex_btn_"] {
+        border-top-left-radius: 0px !important;
+        border-top-right-radius: 0px !important;
+        border-bottom-left-radius: 12px !important;
+        border-bottom-right-radius: 12px !important;
+        border-top: 1px dashed rgba(255, 255, 255, 0.1) !important;
+        background: rgba(15, 23, 42, 0.9) !important;
+        margin-top: 0px !important;
     }
 
     div[data-baseweb="tab-list"] {
