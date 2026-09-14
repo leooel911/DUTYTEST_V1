@@ -19,7 +19,7 @@ from modules.utils import (
 )
 
 # ---------------------------------------------------------
-# 載入全域動態設定 (每次 Rerun 時重新載入最新設定)
+# 載入全域動態設定 (每次 Rerun 時重新載入最新設定)[cite: 3]
 # ---------------------------------------------------------
 sys_cfg = load_system_config()
 ADMIN_PASS_CODE = sys_cfg.get("admin_password") or ADMIN_PASSWORD
@@ -31,7 +31,7 @@ st.set_page_config(
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# Session State 初始化
+# Session State 初始化[cite: 3]
 # ---------------------------------------------------------
 if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
@@ -58,7 +58,7 @@ if "current_unit" not in st.session_state:
 
 
 # =========================================================
-# 🛡️ 前置授權碼門戶檢查（嚴格互斥：未登入就直接攔截）
+# 🛡️ 前置授權碼門戶檢查（嚴格互斥：未登入就直接攔截）[cite: 3]
 # =========================================================
 is_authed = st.session_state.get("authenticated", False)
 is_admin_authed = st.session_state.get("admin_logged_in", False)
@@ -95,20 +95,21 @@ if not is_authed and not is_admin_authed:
 
         st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
         
-        selected_unit = st.selectbox("選擇所屬單位", ["TTN", "TTC", "TTS"], key="login_unit_box")
-        entered_emp = st.text_input(
-            "使用者員編 (範例：A023300)",
-            value=DEFAULT_EMP_ID,
-            placeholder="例如: A023300",
-            max_chars=10,
-            key="login_emp_box",
-        )
-        entered_key = st.text_input(
-            "系統授權碼", type="password", placeholder="請輸入系統授權碼...", key="login_key_box"
-        )
+        # [優化] 使用 st.form 包裝登入欄位，避免打字時頻繁觸發頁面 Rerun
+        with st.form("login_main_form"):
+            selected_unit = st.selectbox("選擇所屬單位", ["TTN", "TTC", "TTS"], key="login_unit_box")
+            entered_emp = st.text_input(
+                "使用者員編 (範例：A023300)",
+                value=DEFAULT_EMP_ID,
+                placeholder="例如: A023300",
+                max_chars=10,
+                key="login_emp_box",
+            )
+            entered_key = st.text_input(
+                "系統授權碼", type="password", placeholder="請輸入系統授權碼...", key="login_key_box"
+            )
 
-        # 乾淨的正版單一按鈕，已徹底移除右側的申請權限按鈕
-        btn_auth = st.button("進入系統", type="primary", use_container_width=True)
+            btn_auth = st.form_submit_button("進入系統", type="primary", use_container_width=True)
 
         if btn_auth:
             success, message, user_session = authenticate_user(selected_unit, entered_emp, entered_key)
@@ -147,7 +148,7 @@ if not is_authed and not is_admin_authed:
 
 
 # =========================================================
-# 以下為「已登入」狀態專屬的操作區塊
+# 以下為「已登入」狀態專屬的操作區塊[cite: 3]
 # =========================================================
 
 if st.session_state.get("inspect_emp_target") is not None:
