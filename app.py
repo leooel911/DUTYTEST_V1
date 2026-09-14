@@ -28,56 +28,8 @@ DEFAULT_EMP_ID = sys_cfg.get("default_emp_id", "A")
 st.set_page_config(
     page_title="TRAIN CREW DUTY ENGINE", page_icon="700st.png", layout="centered"
 )
+# 僅保留原本專案統一管理的 CUSTOM_CSS，不作額外暴力覆寫
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
-
-# ---------------------------------------------------------
-# 強制覆寫 Streamlit BaseWeb 元件：徹底消除白色輸入框
-# ---------------------------------------------------------
-st.markdown("""
-<style>
-    /* 調整所有輸入框與選單的標題文字顏色 */
-    .stTextInput label, .stSelectbox label, .stRadio label, .stDateInput label {
-        color: #E2E8F0 !important;
-        font-weight: 600 !important;
-    }
-    
-    /* 強制修改 Streamlit 輸人框外層容器背景（消除白色） */
-    div[data-baseweb="input"] {
-        background-color: #1E293B !important;
-        border-radius: 6px !important;
-        border: 1px solid #334155 !important;
-    }
-    
-    div[data-baseweb="input"] > div {
-        background-color: transparent !important;
-        color: #F8FAFC !important;
-    }
-    
-    /* 輸人框文字顏色 */
-    .stTextInput input {
-        color: #F8FAFC !important;
-        background-color: transparent !important;
-    }
-    
-    /* 下拉選單外層背景 */
-    div[data-baseweb="select"] > div {
-        background-color: #1E293B !important;
-        color: #F8FAFC !important;
-        border-color: #334155 !important;
-    }
-    
-    /* 下拉選單展開後的選單背景與文字顏色 */
-    div[data-baseweb="popover"] div {
-        background-color: #1E293B !important;
-        color: #F8FAFC !important;
-    }
-    
-    /* 調整輸入框內的預設提示字 (placeholder) 顏色 */
-    input::placeholder {
-        color: #64748B !important;
-    }
-</style>
-""", unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # Session State 初始化
