@@ -130,7 +130,7 @@ C_OT_TXT: str = "#EF4444"
 C_NOTE_TXT: str = "#4C1D95"
 C_TOWN_TXT: str = "#000000"
 
-# 全站專業級 CSS 美化樣式 (已加入 BaseWeb 輸入框深色背景修正)
+# 全站專業級 CSS 美化樣式 (已修正輸入框底層白底問題)
 CUSTOM_CSS: str = """
 <style>
     header[data-testid="stHeader"] { background: transparent !important; }
@@ -182,20 +182,20 @@ CUSTOM_CSS: str = """
         font-family: monospace !important;
     }
 
-    /* 精準修正輸入框與下拉選單底層的白色背景 */
+    /* 徹底修正輸入框、密碼框與下拉選單的白色背景 */
     div[data-baseweb="input"], 
-    div[data-baseweb="input"] > div {
+    div[data-baseweb="base-input"],
+    div[data-baseweb="input"] > div,
+    div[data-baseweb="base-input"] > div {
         background-color: #1E293B !important;
-        border: 1px solid rgba(56, 189, 248, 0.3) !important;
-        border-radius: 8px !important;
+        border-color: #475569 !important;
         color: #F8FAFC !important;
     }
     
     div[data-baseweb="select"], 
     div[data-baseweb="select"] > div {
         background-color: #1E293B !important;
-        border: 1px solid rgba(56, 189, 248, 0.3) !important;
-        border-radius: 8px !important;
+        border-color: #475569 !important;
         color: #F8FAFC !important;
     }
     
@@ -210,7 +210,8 @@ CUSTOM_CSS: str = """
     }
 
     div[data-testid="stTextInput"] input,
-    div[data-testid="stTextArea"] textarea {
+    div[data-testid="stTextArea"] textarea,
+    div[data-baseweb="base-input"] input {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
@@ -219,13 +220,17 @@ CUSTOM_CSS: str = """
         padding: 8px 12px !important;
         font-family: monospace !important;
     }
+    
     div[data-testid="stTextInput"] input::placeholder,
-    div[data-testid="stTextArea"] textarea::placeholder {
+    div[data-testid="stTextArea"] textarea::placeholder,
+    div[data-baseweb="base-input"] input::placeholder {
         color: #64748B !important;
         -webkit-text-fill-color: #64748B !important;
     }
+    
     div[data-testid="stTextInput"] div[data-baseweb="input"]:focus-within,
-    div[data-testid="stTextArea"] div[data-baseweb="textarea"]:focus-within {
+    div[data-testid="stTextArea"] div[data-baseweb="textarea"]:focus-within,
+    div[data-baseweb="base-input"]:focus-within {
         border-color: #38BDF8 !important;
         box-shadow: 0 0 12px rgba(56, 189, 248, 0.3) !important;
     }
