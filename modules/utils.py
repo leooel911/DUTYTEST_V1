@@ -1,7 +1,3 @@
-"""
-CREW DUTY ENGINE - Core Utilities & Logic (V1)
-提供 Excel 安全讀取、儲存格解析、勤務特徵識別、連班計算、時區校正與 IP/設備日誌系統
-"""
 import json
 import os
 import re
@@ -18,15 +14,11 @@ if BASE_DIR not in sys.path:
 
 from config import DATA_DIR, LEAVE_CODES, LOG_FILE, NATIONAL_HOLIDAYS, TAIWAN_TZ, UNITS
 
-# 台灣時區預設值 (UTC+8)
 TW_TZ = timezone(timedelta(hours=8))
-
-# 預編譯正線車次規則：[第一碼運轉區域 N/C/S] + [第二碼職位別 D/M/F/G/H] + [三位數以上班別數字]
 MAINLINE_PATTERN = re.compile(r"^[NCS][DMFGH]\d+", re.IGNORECASE)
 
 
 def parse_user_agent(ua_string: str) -> str:
-    """簡易解析 User-Agent 為易讀的設備與瀏覽器標籤"""
     if not ua_string:
         return "未知設備"
 
@@ -58,7 +50,6 @@ def parse_user_agent(ua_string: str) -> str:
 
 
 def get_client_info() -> Tuple[str, str]:
-    """擷取使用者的 IP 位址與裝置資訊 (User-Agent)"""
     try:
         headers = getattr(st.context, "headers", {})
         ip = headers.get("X-Forwarded-For", headers.get("Remote-Addr", "未知 IP"))
@@ -73,7 +64,6 @@ def get_client_info() -> Tuple[str, str]:
 
 
 def normalize_date_str(val: Any) -> str:
-    """將各種日期格式 (如 "2026/09/06", "09/06", "9/6", "09/06(日)") 統一轉換為標準 "M/D" 格式"""
     if pd.isna(val) or val is None:
         return ""
     s = str(val).strip()
@@ -84,7 +74,6 @@ def normalize_date_str(val: Any) -> str:
 
 
 def get_file_mtime_str(file_path: str) -> str:
-    """取得檔案最後修改時間字串 (強制轉為台灣時間)"""
     if isinstance(file_path, str) and os.path.exists(file_path) and os.path.getsize(file_path) > 0:
         try:
             mtime = os.path.getmtime(file_path)
@@ -97,7 +86,6 @@ def get_file_mtime_str(file_path: str) -> str:
 
 
 def safe_read_excel(file_path: str, header: int = 3) -> pd.DataFrame:
-    """安全讀取 Excel 檔案，處理例外狀況"""
     if not (isinstance(file_path, str) and os.path.exists(file_path) and os.path.getsize(file_path) > 0):
         return pd.DataFrame()
     try:
@@ -107,7 +95,6 @@ def safe_read_excel(file_path: str, header: int = 3) -> pd.DataFrame:
 
 
 def clean_time_str(time_str: Optional[str]) -> Optional[str]:
-    """將時間字串統一轉換為兩位數小時格式 HH:MM (例如 5:26 -> 05:26)"""
     if not time_str:
         return None
     time_str = str(time_str).strip().replace("：", ":")
@@ -119,7 +106,6 @@ def clean_time_str(time_str: Optional[str]) -> Optional[str]:
 
 
 def parse_cell(cell_value: Any) -> Dict[str, Any]:
-    """解析乘務大表個別儲存格 (強制嚴格過濾報到時間，排除備註時間干擾)"""
     if pd.isna(cell_value) or cell_value is None:
         return {"train": "無", "start": None, "end": None, "hours": None, "note": ""}
 
@@ -192,7 +178,6 @@ def parse_cell(cell_value: Any) -> Dict[str, Any]:
 
 
 def is_cell_off_day(cell_value: Any) -> bool:
-    """判斷該儲存格是否為純休假日 (DO / D2W / 休 等)"""
     if pd.isna(cell_value) or cell_value is None:
         return True
     val_str = str(cell_value).strip().upper()
@@ -213,7 +198,6 @@ def is_cell_off_day(cell_value: Any) -> bool:
 
 
 def is_overtime(hours_str: Optional[str], train_code: str = "", note: str = "") -> bool:
-    """檢核工時是否大於 8.5 小時 (支援 H:MM、HH:MM、8.5h、8h30 等格式)"""
     if not hours_str:
         return False
     try:
@@ -240,20 +224,13 @@ def is_overtime(hours_str: Optional[str], train_code: str = "", note: str = "") 
 
 
 def is_town_shift(train_code: str, note: str = "") -> bool:
-    """
-    判斷是否為「非正線」勤務
-    邏輯：只要包含有效車次代碼且「不符合正線規則」(N/C/S + D/M/F/G/H + 數字)，即判定為非正線 (True)
-    """
     tr = str(train_code).strip().upper()
-
     if not tr or tr in ["無", "NAN", "NONE", "休", "OFF", "DO"]:
         return False
-
     return not bool(MAINLINE_PATTERN.match(tr))
 
 
 def translate_train_code(code: Any) -> str:
-    """轉換車次代碼為友善顯示字串"""
     s = str(code).strip()
     if not s or s in ["無", "nan", "None"]:
         return "例休"
@@ -261,7 +238,6 @@ def translate_train_code(code: Any) -> str:
 
 
 def calculate_consecutive_work_days(row: pd.Series, target_date_str: str) -> int:
-    """計算包含指定日期 (target_date_str) 在內的連續出勤天數 (雙向向左與向右擴展)"""
     norm_target = normalize_date_str(target_date_str)
     if not norm_target:
         return 0
@@ -304,7 +280,6 @@ def calculate_consecutive_work_days(row: pd.Series, target_date_str: str) -> int
 
 
 def check_week_has_holiday(target_date: str, date_cols: List[str], columns: Optional[Any] = None) -> Tuple[bool, str]:
-    """檢查指定日期所屬週次是否涵蓋國定假日"""
     if not target_date or not date_cols:
         return False, ""
     try:
@@ -346,7 +321,6 @@ def log_activity(
     detail: Optional[str] = None,
     **kwargs: Any,
 ) -> None:
-    """寫入全站系統操作日誌"""
     os.makedirs(DATA_DIR, exist_ok=True)
 
     tz = TAIWAN_TZ if TAIWAN_TZ else TW_TZ
@@ -405,7 +379,6 @@ def log_activity(
 
 
 def load_activity_logs() -> List[Dict[str, str]]:
-    """讀取系統歷史操作日誌"""
     csv_file = os.path.join(DATA_DIR, "system_logs.csv")
     if os.path.exists(csv_file):
         try:
@@ -434,7 +407,6 @@ MAINTENANCE_FILE = os.path.join(DATA_DIR, "maintenance.json")
 
 
 def is_module_maintenance(unit_code: str, module_key: str) -> bool:
-    """讀取模組維護狀態"""
     if os.path.exists(MAINTENANCE_FILE):
         try:
             with open(MAINTENANCE_FILE, "r", encoding="utf-8") as f:
@@ -446,7 +418,6 @@ def is_module_maintenance(unit_code: str, module_key: str) -> bool:
 
 
 def set_module_maintenance(unit_code: str, module_key: str, state: bool) -> None:
-    """寫入模組維護狀態"""
     os.makedirs(DATA_DIR, exist_ok=True)
     data = {}
     if os.path.exists(MAINTENANCE_FILE):
@@ -463,7 +434,6 @@ def set_module_maintenance(unit_code: str, module_key: str, state: bool) -> None
 
 
 def set_simulated_cell(row: pd.Series, date_str: str, val: str) -> pd.Series:
-    """模擬換假試算時更新該日期的儲存格"""
     norm_target = normalize_date_str(date_str)
     new_row = row.copy()
     for idx, col in enumerate(new_row.index):
@@ -476,7 +446,6 @@ def set_simulated_cell(row: pd.Series, date_str: str, val: str) -> pd.Series:
 
 
 def get_employee_name(unit_code: str, emp_id: str) -> str:
-    """依員編向 Excel 大表查詢姓名"""
     emp_id_str = str(emp_id).strip().upper()
     unit_files = UNITS.get(unit_code, {})
     for role, path in unit_files.items():
@@ -492,13 +461,11 @@ def get_employee_name(unit_code: str, emp_id: str) -> str:
 
 
 def format_display_name(name: str) -> str:
-    """格式化顯示姓名"""
     s = str(name).strip()
     return s if s else ""
 
 
 def send_admin_email(req_unit: str, clean_emp: str, clean_name: str, req_reason: str) -> Tuple[bool, str]:
-    """發送管理員通知郵件"""
     log_activity(
         action="權限申請郵件通知",
         details=f"原因:{req_reason}",
