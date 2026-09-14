@@ -4,6 +4,11 @@
 ADMIN_PASSWORD = "your_admin_password"
 CREW_ACCESS_PASSWORD = "your_crew_password"
 
+# 系統與模組所需參數
+FEEDBACK_IMG_DIR = "feedback_images"
+LEAVE_CODES = []  # 請依您的專案需求保留原本的內容
+UNITS = []        # 請依您的專案需求保留原本的內容
+
 # 顏色常數
 C_DO_TXT = "#881337"
 C_PAY_TXT = "#9A3412"
@@ -13,7 +18,7 @@ C_NOTE_TXT = "#4C1D95"
 C_TOWN_TXT = "#000000"
 
 # ==========================================
-# 自訂 CSS 樣式（必須全部包在三引號 """ 內）
+# 自訂 CSS 樣式
 # ==========================================
 CUSTOM_CSS = """
 /* 徽章樣式 */
