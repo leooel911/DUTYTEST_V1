@@ -19,19 +19,19 @@ from modules.utils import (
 )
 
 # ---------------------------------------------------------
-# 載入全域動態設定 (每次 Rerun 時重新載入最新設定)[cite: 3]
+# 載入全域動態設定 (每次 Rerun 時重新載入最新設定)
 # ---------------------------------------------------------
 sys_cfg = load_system_config()
 ADMIN_PASS_CODE = sys_cfg.get("admin_password") or ADMIN_PASSWORD
 DEFAULT_EMP_ID = sys_cfg.get("default_emp_id", "A")
 
 st.set_page_config(
-    page_title="TTN Shift Producer", page_icon="700st.png", layout="centered"
+    page_title="TRAIN CREW DUTY ENGINE", page_icon="700st.png", layout="centered"
 )
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# Session State 初始化[cite: 3]
+# Session State 初始化
 # ---------------------------------------------------------
 if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
@@ -58,7 +58,7 @@ if "current_unit" not in st.session_state:
 
 
 # =========================================================
-# 🛡️ 前置授權碼門戶檢查（嚴格互斥：未登入就直接攔截）[cite: 3]
+# 前置授權碼門戶檢查（消費者介面：無裝飾貼圖，嚴格驗證）
 # =========================================================
 is_authed = st.session_state.get("authenticated", False)
 is_admin_authed = st.session_state.get("admin_logged_in", False)
@@ -69,7 +69,7 @@ if not is_authed and not is_admin_authed:
     <div style="text-align: center; margin-top: 1.5rem; margin-bottom: 1.2rem;">
         <div style="font-size: 26px; font-weight: 900; letter-spacing: 1.5px; color: #F8FAFC; font-family: monospace;">CREW DUTY ENGINE</div>
         <div style="color: #94A3B8; font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 6px; font-family: monospace;">
-            BUSY DOING NOTHING PRODUCTIVE<br>C.L.F EDITION
+            OPERATIONS MANAGEMENT SYSTEM<br>C.L.F EDITION
         </div>
     </div>
     """,
@@ -78,16 +78,16 @@ if not is_authed and not is_admin_authed:
 
     col1, col2, col3 = st.columns([1, 2.4, 1])
     with col2:
-        with st.expander("登入前系統說明與試用須知（點擊展開）", expanded=False):
+        with st.expander("系統登入指引與試用須知", expanded=False):
             st.markdown(
                 """
             <div style="font-size: 12.5px; color: #CBD5E1; line-height: 1.7; font-family: monospace;">
-                <div style="color: #38BDF8; font-weight: 800; margin-bottom: 6px;">系統開放試用公告</div>
+                <div style="color: #38BDF8; font-weight: 800; margin-bottom: 6px;">INTERNAL TEST NOTICE</div>
                 本系統目前為正式環境第一階段特定人員內部測試。<br><br>
-                <div style="color: #FBBF24; font-weight: 800; margin-bottom: 4px;">重要提醒與注意事項：</div>
+                <div style="color: #FBBF24; font-weight: 800; margin-bottom: 4px;">IMPORTANT GUIDELINES:</div>
                 1. <b>排班依據</b>：本系統班表僅供個人調假與換班快篩參考，<b>即時班表務必以公司官方公告為準</b>。<br>
                 2. <b>資訊安全</b>：班表相關資料屬內部營運資訊，<b>請勿外流授權碼與班表截圖</b>。<br>
-                3. <b>權限與回報</b>：登入後若發現資料有誤，請善用頁尾<b>「問題回報」</b>。
+                3. <b>權限與回報</b>：登入後若發現資料有誤，請透過頁尾<b>「問題回報與建議」</b>提出。
             </div>
             """,
                 unsafe_allow_html=True,
@@ -95,7 +95,6 @@ if not is_authed and not is_admin_authed:
 
         st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
         
-        # [優化] 使用 st.form 包裝登入欄位，避免打字時頻繁觸發頁面 Rerun
         with st.form("login_main_form"):
             selected_unit = st.selectbox("選擇所屬單位", ["TTN", "TTC", "TTS"], key="login_unit_box")
             entered_emp = st.text_input(
@@ -142,13 +141,14 @@ if not is_authed and not is_admin_authed:
                 )
                 st.rerun()
             else:
-                st.error(f" 登入失敗：{message}")
+                # 錯誤警示採紅色系提示
+                st.error(f"AUTHENTICATION FAILED: {message}")
 
     st.stop()
 
 
 # =========================================================
-# 以下為「已登入」狀態專屬的操作區塊[cite: 3]
+# 已登入狀態專屬操作區塊
 # =========================================================
 
 if st.session_state.get("inspect_emp_target") is not None:
@@ -159,7 +159,7 @@ if st.session_state.get("inspect_emp_target") is not None:
         f"""
     <div class="section-header-box">
         <div class="section-title">[{current_unit}] 組員完整班表檢視: {target_emp}</div>
-        <div class="section-subtitle">Inspection Mode // Full Schedule View</div>
+        <div class="section-subtitle">INSPECTION MODE // FULL SCHEDULE VIEW</div>
     </div>
     """,
         unsafe_allow_html=True,
@@ -171,7 +171,7 @@ if st.session_state.get("inspect_emp_target") is not None:
 
     try:
         start_dt, dates, emp_id, emp_name, cells = process_file_data(target_emp)
-        with st.spinner(f"正在繪製【{emp_name}】的完整月班表資料，請稍候..."):
+        with st.spinner(f"正在載入【{emp_name}】的完整月班表資料..."):
             buf = render_schedule_figure(
                 start_dt,
                 dates,
@@ -179,7 +179,7 @@ if st.session_state.get("inspect_emp_target") is not None:
                 emp_name,
                 cells,
                 current_unit,
-                badge_title="Inspector | C.L.F",
+                badge_title="INSPECTOR | C.L.F",
             )
             st.success(f"已成功載入【{emp_name}】({emp_id}) 之完整月班表")
             render_zoomable_image(buf)
@@ -197,7 +197,7 @@ if st.session_state.get("inspect_emp_target") is not None:
                 st.markdown(
                     """
                     <div style="display: flex; align-items: center; height: 100%; font-size: 12px; color: #94A3B8; font-weight: 500; font-family: monospace; padding-left: 6px;">
-                        提示：手機使用者可長按圖片儲存至相簿
+                        提示：行動裝置使用者可長按圖片儲存至相簿
                     </div>
                     """,
                     unsafe_allow_html=True,
@@ -216,10 +216,10 @@ st.markdown(
 <div class="header-container">
     <div class="main-title">CREW DUTY ENGINE</div>
     <div style="color: #94A3B8; font-size: 10px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; font-family: monospace; margin-top: 3px;">
-        BUSY DOING NOTHING PRODUCTIVE &bull; C.L.F EDITION
+        OPERATIONS MANAGEMENT SYSTEM &bull; C.L.F EDITION
     </div>
     <div class="title-subtitle">
-        <span class="online-dot"></span>WELCOME: {current_unit_label} | {current_operator_id}<span class="online-dot"></span>
+        <span class="online-dot"></span>STATUS: ACTIVE | {current_unit_label} : {current_operator_id}<span class="online-dot"></span>
     </div>
 </div>
 """,
@@ -233,7 +233,7 @@ if enable_beta_banner:
     st.markdown(
         f"""
     <div class="test-env-banner">
-        <div class="test-env-title">Beta測試環境運行中（BETA TEST ENVIRONMENT）</div>
+        <div class="test-env-title">SYSTEM MAINTENANCE NOTICE // BETA ENVIRONMENT</div>
         <div class="test-env-sub">{announcement_msg}</div>
     </div>
     """,
@@ -247,7 +247,7 @@ if st.session_state.get("show_admin_login", False) and not st.session_state.get(
         """
     <div class="section-header-box">
         <div class="section-title">管理員身分驗證</div>
-        <div class="section-subtitle">Administrator Security Verification</div>
+        <div class="section-subtitle">ADMINISTRATOR SECURITY VERIFICATION</div>
     </div>
     """,
         unsafe_allow_html=True,
@@ -286,7 +286,7 @@ if st.session_state.get("show_admin_login", False) and not st.session_state.get(
                     )
                     st.rerun()
                 else:
-                    st.error("管理員密碼錯誤")
+                    st.error("ERROR: 管理員密碼錯誤")
             elif btn_cancel_adm:
                 st.session_state["show_admin_login"] = False
                 st.rerun()
