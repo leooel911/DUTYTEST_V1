@@ -26,7 +26,7 @@ ADMIN_PASS_CODE = sys_cfg.get("admin_password") or ADMIN_PASSWORD
 DEFAULT_EMP_ID = sys_cfg.get("default_emp_id", "A")
 
 st.set_page_config(
-    page_title="TTN Shift Producer", page_icon="700st.png", layout="centered"
+    page_title="TRAIN CREW DUTY CALENDAR", page_icon="700st.png", layout="centered"
 )
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
@@ -58,7 +58,7 @@ if "current_unit" not in st.session_state:
 
 
 # =========================================================
-# 🛡️ 前置授權碼門戶檢查（嚴格互斥：未登入就直接攔截）[cite: 3]
+# 前置授權門戶檢查（消費者介面維持純淨、無任何 Emoji 符號）[cite: 3]
 # =========================================================
 is_authed = st.session_state.get("authenticated", False)
 is_admin_authed = st.session_state.get("admin_logged_in", False)
@@ -78,7 +78,7 @@ if not is_authed and not is_admin_authed:
 
     col1, col2, col3 = st.columns([1, 2.4, 1])
     with col2:
-        with st.expander("登入前系統說明與試用須知（點擊展開）", expanded=False):
+        with st.expander("登入前系統說明與試用須知", expanded=False):
             st.markdown(
                 """
             <div style="font-size: 12.5px; color: #CBD5E1; line-height: 1.7; font-family: monospace;">
@@ -87,7 +87,7 @@ if not is_authed and not is_admin_authed:
                 <div style="color: #FBBF24; font-weight: 800; margin-bottom: 4px;">重要提醒與注意事項：</div>
                 1. <b>排班依據</b>：本系統班表僅供個人調假與換班快篩參考，<b>即時班表務必以公司官方公告為準</b>。<br>
                 2. <b>資訊安全</b>：班表相關資料屬內部營運資訊，<b>請勿外流授權碼與班表截圖</b>。<br>
-                3. <b>權限與回報</b>：登入後若發現資料有誤，請善用頁尾<b>「問題回報」</b>。
+                3. <b>權限與回報</b>：登入後若發現資料有誤，請善用頁尾的「問題回報與建議」。
             </div>
             """,
                 unsafe_allow_html=True,
@@ -95,7 +95,7 @@ if not is_authed and not is_admin_authed:
 
         st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
         
-        # [優化] 使用 st.form 包裝登入欄位，避免打字時頻繁觸發頁面 Rerun
+        # 使用 Form 最佳化輸入體驗，避免打字時頻繁 Rerun
         with st.form("login_main_form"):
             selected_unit = st.selectbox("選擇所屬單位", ["TTN", "TTC", "TTS"], key="login_unit_box")
             entered_emp = st.text_input(
@@ -142,13 +142,13 @@ if not is_authed and not is_admin_authed:
                 )
                 st.rerun()
             else:
-                st.error(f" 登入失敗：{message}")
+                st.error(f"登入失敗：{message}")
 
     st.stop()
 
 
 # =========================================================
-# 以下為「已登入」狀態專屬的操作區塊[cite: 3]
+# 已登入狀態專屬操作區塊[cite: 3]
 # =========================================================
 
 if st.session_state.get("inspect_emp_target") is not None:
@@ -171,7 +171,7 @@ if st.session_state.get("inspect_emp_target") is not None:
 
     try:
         start_dt, dates, emp_id, emp_name, cells = process_file_data(target_emp)
-        with st.spinner(f"正在繪製【{emp_name}】的完整月班表資料，請稍候..."):
+        with st.spinner(f"正在繪製 [{emp_name}] 的完整月班表資料，請稍候..."):
             buf = render_schedule_figure(
                 start_dt,
                 dates,
@@ -181,7 +181,7 @@ if st.session_state.get("inspect_emp_target") is not None:
                 current_unit,
                 badge_title="Inspector | C.L.F",
             )
-            st.success(f"已成功載入【{emp_name}】({emp_id}) 之完整月班表")
+            st.success(f"已成功載入 [{emp_name}] ({emp_id}) 之完整月班表")
             render_zoomable_image(buf)
 
             col_dl1, col_dl2 = st.columns([1, 1])
@@ -203,7 +203,7 @@ if st.session_state.get("inspect_emp_target") is not None:
                     unsafe_allow_html=True,
                 )
     except Exception as e:
-        st.error(f"載入組員【{target_emp}】班表時發生錯誤：{e}")
+        st.error(f"載入組員 [{target_emp}] 班表時發生錯誤：{e}")
 
     st.stop()
 
@@ -233,7 +233,7 @@ if enable_beta_banner:
     st.markdown(
         f"""
     <div class="test-env-banner">
-        <div class="test-env-title">Beta測試環境運行中（BETA TEST ENVIRONMENT）</div>
+        <div class="test-env-title">BETA TEST ENVIRONMENT RUNNING</div>
         <div class="test-env-sub">{announcement_msg}</div>
     </div>
     """,
