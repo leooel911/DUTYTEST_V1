@@ -31,26 +31,33 @@ st.set_page_config(
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 強制修正深色模式下輸入框、選單與標題的配色及對比度
+# 質感深色模式：修正輸入框背景（絕不發白）、標題與提示字
 # ---------------------------------------------------------
 st.markdown("""
 <style>
-    /* 調整所有輸入框、選單、選項按鈕的標題文字顏色為高對比亮白 */
+    /* 調整所有輸入框、選單的標題文字顏色為清晰的亮灰色 */
     .stTextInput label, .stSelectbox label, .stRadio label, .stDateInput label {
-        color: #F8FAFC !important;
+        color: #E2E8F0 !important;
         font-weight: 600 !important;
     }
     
-    /* 調整輸入框與下拉選單本身的背景、文字與邊框顏色 */
+    /* 調整輸入框與下拉選單本體：沉穩深色背景 + 精緻邊框（拒絕白色！） */
     .stTextInput input, .stSelectbox div[data-baseweb="select"] > div {
-        background-color: #1E232A !important;
-        color: #FFFFFF !important;
-        border-color: #4A5568 !important;
+        background-color: #0E1117 !important;
+        color: #F8FAFC !important;
+        border: 1px solid #334155 !important;
+        border-radius: 6px !important;
+    }
+    
+    /* 下拉選單展開後的選單背景與文字顏色 */
+    div[data-baseweb="popover"] div {
+        background-color: #1E293B !important;
+        color: #F8FAFC !important;
     }
     
     /* 調整輸入框內的預設提示字 (placeholder) 顏色 */
     input::placeholder {
-        color: #94A3B8 !important;
+        color: #64748B !important;
     }
 </style>
 """, unsafe_allow_html=True)
