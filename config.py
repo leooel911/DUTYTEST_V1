@@ -130,18 +130,18 @@ C_OT_TXT: str = "#991B1B"
 C_NOTE_TXT: str = "#4C1D95"
 C_TOWN_TXT: str = "#000000"
 
-# 全站 CSS 美化樣式
-CUSTOM_CSS: str = """
-<style>
-    header[data-testid="stHeader"] { background: transparent !important; }
-    div[data-testid="stToolbar"] { visibility: hidden !important; }
-    footer { visibility: hidden !important; }
-
-    .stApp { 
-        background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #0f172a 50%, #020617 100%) !important; 
-        color: #F8FAFC !important; 
-        background-attachment: fixed !important;
-    }
+/* 修正文字輸入框與文字域的樣式 */
+.stTextInput input, .stTextArea textarea {
+    background-color: rgba(15, 23, 42, 0.75) !important;
+    color: #F8FAFC !important;
+    border: none !important;
+}
+div[data-testid="stTextInput"] div[data-baseweb="input"],
+div[data-testid="stTextArea"] div[data-baseweb="textarea"] {
+    background: rgba(15, 23, 42, 0.75) !important;
+    border: 1px solid rgba(56, 189, 248, 0.35) !important;
+    border-radius: 10px !important;
+}
     
     .hours-badge {
         background: rgba(56, 189, 248, 0.15) !important;
