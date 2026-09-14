@@ -2,20 +2,20 @@ import os
 from datetime import timedelta, timezone
 from typing import Any, Dict, List, Tuple
 
-# 時區設定[cite: 2]
+# 時區設定
 TAIWAN_TZ: timezone = timezone(timedelta(hours=8))
 
-# 基礎路徑定義[cite: 2]
+# 基礎路徑定義
 DATA_DIR: str = os.path.join(os.getcwd(), "data")
 FEEDBACK_IMG_DIR: str = os.path.join(DATA_DIR, "feedback_uploads")
 LOG_FILE: str = os.path.join(DATA_DIR, "activity_log.txt")
 
-# 全站統一設定檔與白名單路徑[cite: 2]
+# 全站統一設定檔與白名單路徑
 SYSTEM_CONFIG_FILE: str = os.path.join(DATA_DIR, "system_config.json")
 ALLOWED_USERS_FILE: str = os.path.join(DATA_DIR, "allowed_users.json")
 WHITELIST_FILE: str = os.path.join(DATA_DIR, "whitelist.json")
 
-# 各基地所屬單位班表與 Mapping 映射路徑設定[cite: 2]
+# 各基地所屬單位班表與 Mapping 映射路徑設定
 UNITS: Dict[str, Dict[str, Any]] = {
     "TTN": {
         "駕駛": os.path.join(DATA_DIR, "TTN_TD.xlsx"),
@@ -49,7 +49,7 @@ UNITS: Dict[str, Dict[str, Any]] = {
     },
 }
 
-# 國定假日標記對照字典[cite: 2]
+# 國定假日標記對照字典
 NATIONAL_HOLIDAYS: Dict[str, str] = {
     "1/1": "元旦",
     "2/16": "除夕",
@@ -68,7 +68,7 @@ NATIONAL_HOLIDAYS: Dict[str, str] = {
     "12/25": "行憲紀念日",
 }
 
-# 疏運期間標記字典[cite: 2]
+# 疏運期間標記字典
 TRANSPORT_PERIODS: Dict[str, str] = {
     "9/24-9/29": "中秋疏運",
     "10/4-10/10": "雙十節疏運",
@@ -77,11 +77,11 @@ TRANSPORT_PERIODS: Dict[str, str] = {
 
 TITLE: str = "TRAIN CREW DUTY CALENDAR"
 
-# 預設系統通行密碼預設值（當 json 尚未設定時備援）[cite: 2]
+# 預設系統通行密碼預設值
 ADMIN_PASSWORD: str = "Lf090000"
 CREW_ACCESS_PASSWORD: str = "0"
 
-# 完整通用請假代碼集[cite: 2]
+# 完整通用請假代碼集
 LEAVE_CODES: List[str] = [
     "PAY",
     "CMP",
@@ -113,7 +113,7 @@ LEAVE_CODES: List[str] = [
     "WRSL",
 ]
 
-# 班表圖像渲染色調定義[cite: 2]
+# 班表圖像渲染色調定義
 C_HDR: str = "#0F172A"
 C_BORDER: str = "#475569"
 C_EMPTY: str = "#F1F5F9"
@@ -126,11 +126,11 @@ C_TOWN_BG: str = "#CBD5E1"
 C_DO_TXT: str = "#881337"
 C_PAY_TXT: str = "#9A3412"
 C_HOLI_TXT: str = "#7C2D12"
-C_OT_TXT: str = "#991B1B"
+C_OT_TXT: str = "#EF4444"  # 調整為明確紅色警示
 C_NOTE_TXT: str = "#4C1D95"
 C_TOWN_TXT: str = "#000000"
 
-# 全站 CSS 美化樣式（已優化文字框顏色與對比）[cite: 2]
+# 全站專業級 CSS 美化樣式（嚴格配色：紅色警示、黃色維修/公告、無裝飾貼圖）
 CUSTOM_CSS: str = """
 <style>
     header[data-testid="stHeader"] { background: transparent !important; }
@@ -180,7 +180,7 @@ CUSTOM_CSS: str = """
         min-height: 42px !important;
     }
 
-    /* 修正文字輸入框背景與文字顏色，避免發生背景或文字變黑看不見的問題 */
+    /* 文字輸入框與區塊樣式 */
     div[data-testid="stTextInput"] div[data-baseweb="input"],
     div[data-testid="stTextArea"] div[data-baseweb="textarea"] {
         background: rgba(15, 23, 42, 0.85) !important;
@@ -308,6 +308,7 @@ CUSTOM_CSS: str = """
     .main-title { color: #F8FAFC !important; font-size: 16px !important; font-weight: 800; letter-spacing: 1.2px; margin: 0; font-family: monospace; }
     .title-subtitle { color: #94A3B8; font-size: 10px !important; font-weight: 600; letter-spacing: 0.8px; font-family: monospace; margin-top: 3px; }
 
+    /* 黃色系：系統維修 / 測試模式公告專用色調 */
     .test-env-banner {
         border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 10px; padding: 6px 10px !important; margin-bottom: 0.8rem !important;
         text-align: center; background: rgba(39, 28, 12, 0.55); backdrop-filter: blur(12px); font-family: monospace;
@@ -339,6 +340,7 @@ CUSTOM_CSS: str = """
         box-shadow: 0 0 10px rgba(56, 189, 248, 0.25) !important;
     }
 
+    /* 黃色系維護公告橫幅 */
     .admin-maint-banner {
         border: 1px solid rgba(245, 158, 11, 0.6);
         border-left: 5px solid #F59E0B;
@@ -427,10 +429,11 @@ CUSTOM_CSS: str = """
         align-items: center;
         flex-wrap: wrap;
     }
+    /* 紅色系警示徽章 */
     .long-badge {
-        background: rgba(225, 29, 72, 0.2) !important;
-        color: #FB7185 !important;
-        border: 1px solid rgba(244, 63, 94, 0.5) !important;
+        background: rgba(239, 68, 68, 0.2) !important;
+        color: #F87171 !important;
+        border: 1px solid rgba(239, 68, 68, 0.5) !important;
         border-radius: 6px !important;
         padding: 2px 6px !important;
         font-size: 10.5px !important;
