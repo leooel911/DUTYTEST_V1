@@ -141,7 +141,7 @@ if not is_authed and not is_admin_authed:
                 )
                 st.rerun()
             else:
-                # 錯誤警示採紅色系提示
+                # 錯誤警示採嚴格紅色系提示
                 st.error(f"AUTHENTICATION FAILED: {message}")
 
     st.stop()
