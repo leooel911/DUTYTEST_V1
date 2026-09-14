@@ -10,18 +10,12 @@ from config import DATA_DIR, UNITS, WHITELIST_FILE
 from modules.utils import normalize_date_str, parse_cell, safe_read_excel
 
 
-# =============================================================================
-# 1. 既有大表與檔案服務
-# =============================================================================
-
 def get_current_role_files() -> Dict[str, str]:
-    """取得當前選擇單位的各大表檔案路徑"""
     current_unit = st.session_state.get("current_unit", "TTN")
     return UNITS.get(current_unit, UNITS.get("TTN", {}))
 
 
 def get_schedule_range() -> str:
-    """自動從當前大表中解析出排班週期範圍（例如：09/01 ~ 09/30）"""
     unit_files = get_current_role_files()
     for role_name in ["駕駛", "列車長", "服勤員"]:
         f_path = unit_files.get(role_name, "")
@@ -42,10 +36,6 @@ def get_schedule_range() -> str:
 
 
 def process_file_data(emp_input: str) -> Tuple[datetime, List[str], str, str, List[Dict[str, Any]]]:
-    """
-    掃描三大大表，解析指定員編/姓名之完整月班表資料
-    回傳: (開始日期物件, 日期標籤清單, 解析員編, 解析姓名, 格子解析資料列表)
-    """
     clean_keyword = emp_input.strip().upper()
     unit_files = get_current_role_files()
     
@@ -96,12 +86,7 @@ def process_file_data(emp_input: str) -> Tuple[datetime, List[str], str, str, Li
     return start_dt, dates, emp_id, emp_name, cells
 
 
-# =============================================================================
-# 2. 全域系統設定與白名單 JSON 讀寫服務
-# =============================================================================
-
 def load_system_config() -> Dict[str, Any]:
-    """讀取全域系統設定檔 (system_config.json)"""
     config_path = os.path.join(DATA_DIR, "system_config.json")
     if os.path.exists(config_path):
         try:
@@ -111,8 +96,8 @@ def load_system_config() -> Dict[str, Any]:
             pass
     return {
         "admin_password": "Lf090000",
-        "vip_password": "0",       # 高級 VIP 快捷授權碼：0
-        "user_password": "09000",   # 一般組員預設授權碼：09000
+        "vip_password": "0",
+        "user_password": "09000",
         "strict_streak_limit": 6,
         "enable_beta_notice": True,
         "announcement": "目前為內部測試階段｜本頁面末端可聯繫管理者",
@@ -120,7 +105,6 @@ def load_system_config() -> Dict[str, Any]:
 
 
 def save_system_config(cfg: Dict[str, Any]) -> None:
-    """寫入全域系統設定檔"""
     os.makedirs(DATA_DIR, exist_ok=True)
     config_path = os.path.join(DATA_DIR, "system_config.json")
     with open(config_path, "w", encoding="utf-8") as f:
@@ -128,7 +112,6 @@ def save_system_config(cfg: Dict[str, Any]) -> None:
 
 
 def load_whitelist(unit_code: str = "TTN") -> Dict[str, Any]:
-    """讀取指定單位的白名單 (whitelist.json)"""
     wl_path = os.path.join(DATA_DIR, WHITELIST_FILE)
     if os.path.exists(wl_path):
         try:
@@ -141,7 +124,6 @@ def load_whitelist(unit_code: str = "TTN") -> Dict[str, Any]:
 
 
 def save_whitelist(unit_code: str, unit_data: Dict[str, Any]) -> None:
-    """寫入指定單位的白名單"""
     os.makedirs(DATA_DIR, exist_ok=True)
     wl_path = os.path.join(DATA_DIR, WHITELIST_FILE)
     all_wl = {}
@@ -157,12 +139,7 @@ def save_whitelist(unit_code: str, unit_data: Dict[str, Any]) -> None:
         json.dump(all_wl, f, ensure_ascii=False, indent=2)
 
 
-# =============================================================================
-# 3. 員編實名核實與雙軌驗證引擎
-# =============================================================================
-
 def check_excel_employee_exists(unit_code: str, emp_id: str) -> Tuple[bool, str]:
-    """專門檢查員編是否真實存在於 Excel 班表大表中"""
     clean_id = emp_id.strip().upper()
     if clean_id.isdigit() and len(clean_id) == 6:
         clean_id = f"A{clean_id}"
@@ -184,7 +161,6 @@ def check_excel_employee_exists(unit_code: str, emp_id: str) -> Tuple[bool, str]
 
 
 def verify_employee_exists(unit_code: str, emp_id: str) -> Tuple[bool, str]:
-    """核實員編是否真實存在（白名單或 Excel）"""
     clean_id = emp_id.strip().upper()
     if not clean_id or clean_id == "A":
         return False, ""
@@ -202,13 +178,11 @@ def verify_employee_exists(unit_code: str, emp_id: str) -> Tuple[bool, str]:
 
 
 def get_employee_name(unit_code: str, emp_id: str) -> str:
-    """依據單位與員編查找組員姓名"""
     exists, name = verify_employee_exists(unit_code, emp_id)
     return name if exists else ""
 
 
 def authenticate_user(unit_code: str, emp_id_input: str, passcode_input: str) -> Tuple[bool, str, Dict[str, Any]]:
-    """雙軌登入驗證引擎（含白名單身分嚴格鎖定）"""
     clean_id = emp_id_input.strip().upper()
     if clean_id.isdigit() and len(clean_id) == 6:
         clean_id = f"A{clean_id}"
@@ -221,8 +195,6 @@ def authenticate_user(unit_code: str, emp_id_input: str, passcode_input: str) ->
     user_pwd = sys_config.get("user_password", "09000")
 
     whitelist = load_whitelist(unit_code)
-
-    # 1. 取得白名單內該員編的詳細資料
     wl_info = whitelist.get(clean_id, {})
     wl_name = ""
     wl_role = "USER"
@@ -235,15 +207,9 @@ def authenticate_user(unit_code: str, emp_id_input: str, passcode_input: str) ->
     elif isinstance(wl_info, str):
         wl_name = wl_info.strip()
 
-    # -------------------------------------------------------------------------
-    # 軌道一：高級 VIP / 特權 / 管理員驗證
-    # -------------------------------------------------------------------------
-
-    # 1. 最高系統管理員 (ADMIN) - 必須明確比對管理員密碼
     if passcode == admin_pwd or wl_role == "ADMIN":
         if passcode != admin_pwd:
             return False, "管理員密碼錯誤！", {"reason": "WRONG_ADMIN_PASSWORD"}
-        
         return True, "歡迎系統管理員！", {
             "authenticated": True,
             "emp_id": clean_id if clean_id and clean_id != "A" else "ADMIN",
@@ -252,45 +218,26 @@ def authenticate_user(unit_code: str, emp_id_input: str, passcode_input: str) ->
             "unit": unit_code,
         }
 
-    # 2. 檢查是否為白名單中的 VIP / TESTER 身分
     if clean_id in whitelist and wl_role in ["VIP_USER", "TESTER"]:
         if custom_pass and custom_pass != "-":
             if passcode == custom_pass:
                 return True, f"歡迎 VIP 組員【{wl_name}】！", {
-                    "authenticated": True,
-                    "emp_id": clean_id,
-                    "emp_name": wl_name,
-                    "role": wl_role,
-                    "unit": unit_code,
+                    "authenticated": True, "emp_id": clean_id, "emp_name": wl_name, "role": wl_role, "unit": unit_code,
                 }
             else:
                 return False, "授權碼無效！請再次確認:", {"reason": "WRONG_VIP_PASSCODE"}
-        
-        # 允許使用預設 VIP 密碼、0、或是一般組員的 09000
+
         if passcode == default_vip_pwd or passcode == "0" or passcode == user_pwd or passcode == "09000":
             return True, f"歡迎 VIP 組員【{wl_name}】！", {
-                "authenticated": True,
-                "emp_id": clean_id,
-                "emp_name": wl_name,
-                "role": wl_role,
-                "unit": unit_code,
+                "authenticated": True, "emp_id": clean_id, "emp_name": wl_name, "role": wl_role, "unit": unit_code,
             }
         else:
             return False, "授權碼無效！請再次確認:", {"reason": "WRONG_PASSCODE"}
 
-    # 3. 通用測試員 (員編填 A 且密碼為 0)
-    if clean_id == "A" and (passcode == default_vip_pwd or passcode == "0" or passcode == user_pwd or passcode == "09000"):
+    if clean_id == "A" and (passcode in [default_vip_pwd, "0", user_pwd, "09000"]):
         return True, "歡迎 VIP 測試員！", {
-            "authenticated": True,
-            "emp_id": "VIP001",
-            "emp_name": "VIP 測試員",
-            "role": "VIP_USER",
-            "unit": unit_code,
+            "authenticated": True, "emp_id": "VIP001", "emp_name": "VIP 測試員", "role": "VIP_USER", "unit": unit_code,
         }
-
-    # -------------------------------------------------------------------------
-    # 軌道二：一般組員實名驗證 (身分為 USER)
-    # -------------------------------------------------------------------------
 
     if not clean_id or clean_id == "A":
         return False, "一般組員請輸入正確員編（例如:A023300）！", {"reason": "INVALID_EMP_ID"}
@@ -306,36 +253,22 @@ def authenticate_user(unit_code: str, emp_id_input: str, passcode_input: str) ->
         return False, "授權碼無效！請再次確認:", {"reason": "WRONG_PASSCODE"}
 
     final_name = wl_name if wl_name else excel_name
-
     return True, f"歡迎！{final_name}", {
-        "authenticated": True,
-        "emp_id": clean_id,
-        "emp_name": final_name,
-        "role": "USER",
-        "unit": unit_code,
+        "authenticated": True, "emp_id": clean_id, "emp_name": final_name, "role": "USER", "unit": unit_code,
     }
 
 
-# =============================================================================
-# 4. 舊版相容性匯入包裝層
-# =============================================================================
-
 def is_user_allowed(first_arg: str, second_arg: str = "TTN") -> Tuple[bool, Any]:
-    """舊版相容函式"""
     if first_arg in ["TTN", "KSH", "TCH"]:
         unit_code, emp_id = first_arg, second_arg
     else:
         emp_id, unit_code = first_arg, second_arg
-        
-    exists, info = verify_employee_exists(unit_code, emp_id)
-    return exists, info
+    return verify_employee_exists(unit_code, emp_id)
 
 
 def verify_crew_membership(first_arg: str, second_arg: str = "TTN") -> Tuple[bool, Any]:
-    """舊版相容函式"""
     if first_arg in ["TTN", "TTC", "TTS"]:
         unit_code, emp_id = first_arg, second_arg
     else:
         emp_id, unit_code = first_arg, second_arg
-        
     return verify_employee_exists(unit_code, emp_id)
