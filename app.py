@@ -31,6 +31,31 @@ st.set_page_config(
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
+# 強制修正深色模式下輸入框、選單與標題的配色及對比度
+# ---------------------------------------------------------
+st.markdown("""
+<style>
+    /* 調整所有輸入框、選單、選項按鈕的標題文字顏色為高對比亮白 */
+    .stTextInput label, .stSelectbox label, .stRadio label, .stDateInput label {
+        color: #F8FAFC !important;
+        font-weight: 600 !important;
+    }
+    
+    /* 調整輸入框與下拉選單本身的背景、文字與邊框顏色 */
+    .stTextInput input, .stSelectbox div[data-baseweb="select"] > div {
+        background-color: #1E232A !important;
+        color: #FFFFFF !important;
+        border-color: #4A5568 !important;
+    }
+    
+    /* 調整輸入框內的預設提示字 (placeholder) 顏色 */
+    input::placeholder {
+        color: #94A3B8 !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# ---------------------------------------------------------
 # Session State 初始化
 # ---------------------------------------------------------
 if "authenticated" not in st.session_state:
