@@ -130,7 +130,7 @@ C_OT_TXT: str = "#EF4444"
 C_NOTE_TXT: str = "#4C1D95"
 C_TOWN_TXT: str = "#000000"
 
-# 全站專業級 CSS 美化樣式
+# 全站專業級 CSS 美化樣式 (已加入 BaseWeb 輸入框深色背景修正)
 CUSTOM_CSS: str = """
 <style>
     header[data-testid="stHeader"] { background: transparent !important; }
@@ -182,14 +182,33 @@ CUSTOM_CSS: str = """
         font-family: monospace !important;
     }
 
-    div[data-testid="stTextInput"] div[data-baseweb="input"],
-    div[data-testid="stTextArea"] div[data-baseweb="textarea"] {
-        background: rgba(15, 23, 42, 0.9) !important;
+    /* 精準修正輸入框與下拉選單底層的白色背景 */
+    div[data-baseweb="input"], 
+    div[data-baseweb="input"] > div {
+        background-color: #1E293B !important;
         border: 1px solid rgba(56, 189, 248, 0.3) !important;
         border-radius: 8px !important;
-        padding: 2px 4px !important;
-        transition: all 0.25s ease !important;
+        color: #F8FAFC !important;
     }
+    
+    div[data-baseweb="select"], 
+    div[data-baseweb="select"] > div {
+        background-color: #1E293B !important;
+        border: 1px solid rgba(56, 189, 248, 0.3) !important;
+        border-radius: 8px !important;
+        color: #F8FAFC !important;
+    }
+    
+    div[data-baseweb="select"] span, 
+    div[data-baseweb="select"] div {
+        color: #F8FAFC !important;
+    }
+    
+    div[data-baseweb="popover"] div {
+        background-color: #1E293B !important;
+        color: #F8FAFC !important;
+    }
+
     div[data-testid="stTextInput"] input,
     div[data-testid="stTextArea"] textarea {
         background: transparent !important;
@@ -211,13 +230,6 @@ CUSTOM_CSS: str = """
         box-shadow: 0 0 12px rgba(56, 189, 248, 0.3) !important;
     }
 
-    div[data-baseweb="select"] { width: 100% !important; }
-    div[data-baseweb="select"] > div {
-        background-color: rgba(15, 23, 42, 0.9) !important;
-        border: 1px solid rgba(56, 189, 248, 0.3) !important;
-        border-radius: 8px !important;
-        color: #F8FAFC !important;
-    }
     div[data-baseweb="select"]:hover > div { border-color: #38BDF8 !important; }
 
     div[data-testid="stElementContainer"]:has(div[data-testid="stRadio"]),
@@ -294,7 +306,6 @@ CUSTOM_CSS: str = """
         font-weight: 800 !important;
     }
 
-    /* 強制將 Slider / Select Slider 的選取區間與按鈕改為科技藍 (#38BDF8) */
     div[data-baseweb="slider"] div[role="slider"] {
         background-color: #38BDF8 !important;
         border-color: #38BDF8 !important;
