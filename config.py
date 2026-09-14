@@ -126,11 +126,11 @@ C_TOWN_BG: str = "#CBD5E1"
 C_DO_TXT: str = "#881337"
 C_PAY_TXT: str = "#9A3412"
 C_HOLI_TXT: str = "#7C2D12"
-C_OT_TXT: str = "#EF4444"  # 調整為明確紅色警示
+C_OT_TXT: str = "#EF4444"
 C_NOTE_TXT: str = "#4C1D95"
 C_TOWN_TXT: str = "#000000"
 
-# 全站專業級 CSS 美化樣式（嚴格配色：紅色警示、黃色維修/公告、無裝飾貼圖）
+# 全站專業級 CSS 美化樣式（嚴格配色：紅色警示、黃色維修、工業級暗色調面板）
 CUSTOM_CSS: str = """
 <style>
     header[data-testid="stHeader"] { background: transparent !important; }
@@ -138,7 +138,7 @@ CUSTOM_CSS: str = """
     footer { visibility: hidden !important; }
 
     .stApp { 
-        background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #0f172a 50%, #020617 100%) !important; 
+        background: radial-gradient(circle at 50% 0%, #0f172a 0%, #090d16 55%, #020617 100%) !important; 
         color: #F8FAFC !important; 
         background-attachment: fixed !important;
     }
@@ -168,7 +168,7 @@ CUSTOM_CSS: str = """
     }
     
     @media (min-width: 1024px) {
-        .block-container { padding: 2.5rem 1.5rem 2.5rem 1.5rem !important; max-width: 1050px !important; }
+        .block-container { padding: 2.5rem 1.5rem 2.5rem 1.5rem !important; max-width: 1080px !important; }
     }
     @media (max-width: 1023px) {
         .block-container { padding: 1rem 0.75rem 2rem 0.75rem !important; max-width: 100% !important; }
@@ -177,15 +177,17 @@ CUSTOM_CSS: str = """
     div[data-testid="stButton"], div.stButton { width: 100% !important; }
     div[data-testid="stButton"] > button, div.stButton > button {
         width: 100% !important;
-        min-height: 42px !important;
+        min-height: 44px !important;
+        border-radius: 8px !important;
+        font-family: monospace !important;
     }
 
-    /* 文字輸入框與區塊樣式 */
+    /* 文字輸入框與文字域專業優化 */
     div[data-testid="stTextInput"] div[data-baseweb="input"],
     div[data-testid="stTextArea"] div[data-baseweb="textarea"] {
-        background: rgba(15, 23, 42, 0.85) !important;
-        border: 1px solid rgba(56, 189, 248, 0.35) !important;
-        border-radius: 10px !important;
+        background: rgba(15, 23, 42, 0.9) !important;
+        border: 1px solid rgba(56, 189, 248, 0.3) !important;
+        border-radius: 8px !important;
         padding: 2px 4px !important;
         transition: all 0.25s ease !important;
     }
@@ -196,29 +198,30 @@ CUSTOM_CSS: str = """
         box-shadow: none !important;
         color: #F8FAFC !important;
         -webkit-text-fill-color: #F8FAFC !important;
-        padding: 6px 10px !important;
+        padding: 8px 12px !important;
         font-family: monospace !important;
     }
     div[data-testid="stTextInput"] input::placeholder,
     div[data-testid="stTextArea"] textarea::placeholder {
-        color: #94A3B8 !important;
-        -webkit-text-fill-color: #94A3B8 !important;
+        color: #64748B !important;
+        -webkit-text-fill-color: #64748B !important;
     }
     div[data-testid="stTextInput"] div[data-baseweb="input"]:focus-within,
     div[data-testid="stTextArea"] div[data-baseweb="textarea"]:focus-within {
         border-color: #38BDF8 !important;
-        box-shadow: 0 0 12px rgba(56, 189, 248, 0.35) !important;
+        box-shadow: 0 0 12px rgba(56, 189, 248, 0.3) !important;
     }
 
     div[data-baseweb="select"] { width: 100% !important; }
     div[data-baseweb="select"] > div {
-        background-color: rgba(15, 23, 42, 0.85) !important;
+        background-color: rgba(15, 23, 42, 0.9) !important;
         border: 1px solid rgba(56, 189, 248, 0.3) !important;
-        border-radius: 10px !important;
+        border-radius: 8px !important;
         color: #F8FAFC !important;
     }
     div[data-baseweb="select"]:hover > div { border-color: #38BDF8 !important; }
 
+    /* 徹底升級 Radio Group (作業模式選單按鈕) 質感與配色 */
     div[data-testid="stElementContainer"]:has(div[data-testid="stRadio"]),
     div[data-testid="stRadio"],
     div[data-testid="stRadio"] > div,
@@ -229,7 +232,7 @@ CUSTOM_CSS: str = """
         flex-direction: column !important;
         flex-wrap: nowrap !important;
         align-items: stretch !important;
-        gap: 8px !important;
+        gap: 10px !important;
     }
 
     div[role="radiogroup"] label div[data-testid="stRadioButtonCustomIcon"],
@@ -241,49 +244,63 @@ CUSTOM_CSS: str = """
         flex: 1 1 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
-        background: rgba(30, 41, 59, 0.7) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-left: 4px solid #38BDF8 !important;
-        border-radius: 8px !important;
-        padding: 12px 16px !important;
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.85) 100%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-left: 4px solid #475569 !important;
+        border-radius: 10px !important;
+        padding: 14px 18px !important;
         margin: 0 !important;
         cursor: pointer !important;
         transition: all 0.2s ease-in-out !important;
         display: flex !important;
-        justify-content: center !important;
+        justify-content: flex-start !important;
         align-items: center !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
     }
 
     div[role="radiogroup"] label p {
-        font-size: 14.5px !important;
+        font-size: 14px !important;
         font-weight: 700 !important;
-        color: #E2E8F0 !important;
+        color: #94A3B8 !important;
         margin: 0 !important;
         white-space: normal !important;
         text-overflow: clip !important;
         word-break: break-word !important;
         line-height: 1.4 !important;
-        text-align: center !important;
+        text-align: left !important;
         width: 100% !important;
+        font-family: monospace !important;
+        letter-spacing: 0.5px !important;
     }
 
     div[role="radiogroup"] > label:hover {
-        background: rgba(51, 65, 85, 0.8) !important;
+        background: linear-gradient(135deg, rgba(51, 65, 85, 0.85) 0%, rgba(30, 41, 59, 0.9) 100%) !important;
         border-color: rgba(56, 189, 248, 0.4) !important;
+        border-left-color: #38BDF8 !important;
+    }
+    div[role="radiogroup"] > label:hover p {
+        color: #F8FAFC !important;
     }
 
+    /* 被選中時的高級冷光藍與銳利邊框 */
     div[role="radiogroup"] > label[data-checked="true"], 
     div[role="radiogroup"] > label:has(input:checked) {
-        background: rgba(30, 64, 175, 0.5) !important;
-        border-color: #60A5FA !important;
-        border-left-color: #60A5FA !important;
-        box-shadow: 0 0 12px rgba(96, 165, 250, 0.25) !important;
+        background: linear-gradient(135deg, rgba(30, 58, 138, 0.65) 0%, rgba(15, 23, 42, 0.9) 100%) !important;
+        border-color: #38BDF8 !important;
+        border-left-color: #38BDF8 !important;
+        box-shadow: 0 0 16px rgba(56, 189, 248, 0.3) !important;
     }
 
     div[role="radiogroup"] > label[data-checked="true"] p,
     div[role="radiogroup"] > label:has(input:checked) p {
         color: #FFFFFF !important;
         font-weight: 800 !important;
+    }
+
+    /* 滑桿元件外觀強化 (Slider) */
+    div[data-baseweb="slider"] {
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
     }
 
     @keyframes online-green-pulse {
@@ -300,33 +317,34 @@ CUSTOM_CSS: str = """
 
     .header-container { 
         display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
-        width: 100%; margin-bottom: 0.6rem !important; padding: 12px 10px !important;
+        width: 100%; margin-bottom: 0.8rem !important; padding: 14px 12px !important;
         backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-        background: rgba(15, 23, 42, 0.55);
-        border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 14px;
+        background: rgba(15, 23, 42, 0.75);
+        border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
-    .main-title { color: #F8FAFC !important; font-size: 16px !important; font-weight: 800; letter-spacing: 1.2px; margin: 0; font-family: monospace; }
-    .title-subtitle { color: #94A3B8; font-size: 10px !important; font-weight: 600; letter-spacing: 0.8px; font-family: monospace; margin-top: 3px; }
+    .main-title { color: #F8FAFC !important; font-size: 17px !important; font-weight: 900; letter-spacing: 1.5px; margin: 0; font-family: monospace; }
+    .title-subtitle { color: #94A3B8; font-size: 10.5px !important; font-weight: 600; letter-spacing: 1px; font-family: monospace; margin-top: 4px; }
 
     /* 黃色系：系統維修 / 測試模式公告專用色調 */
     .test-env-banner {
-        border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 10px; padding: 6px 10px !important; margin-bottom: 0.8rem !important;
-        text-align: center; background: rgba(39, 28, 12, 0.55); backdrop-filter: blur(12px); font-family: monospace;
+        border: 1px solid rgba(245, 158, 11, 0.5); border-radius: 10px; padding: 8px 12px !important; margin-bottom: 1rem !important;
+        text-align: center; background: rgba(39, 28, 12, 0.7); backdrop-filter: blur(12px); font-family: monospace;
     }
-    .test-env-title { color: #FDE68A; font-size: 11px !important; font-weight: 800; letter-spacing: 1px; }
-    .test-env-sub { color: #FCD34D; font-size: 9.5px !important; font-weight: 500; opacity: 0.85; margin-top: 1px; }
+    .test-env-title { color: #FDE68A; font-size: 11.5px !important; font-weight: 800; letter-spacing: 1.2px; }
+    .test-env-sub { color: #FCD34D; font-size: 10px !important; font-weight: 500; opacity: 0.9; margin-top: 2px; }
 
     div.stButton > button[key*="btn_footer_feedback_left"],
     div.stButton > button[key*="btn_footer_admin_right"] {
-        background: rgba(30, 41, 59, 0.45) !important;
-        border: 1px solid rgba(56, 189, 248, 0.25) !important;
+        background: rgba(30, 41, 59, 0.6) !important;
+        border: 1px solid rgba(56, 189, 248, 0.3) !important;
         color: #94A3B8 !important;
         font-size: 11px !important;
         font-weight: 600 !important;
         border-radius: 20px !important;
-        padding: 4px 10px !important;
-        min-height: 32px !important;
-        height: 32px !important;
+        padding: 4px 12px !important;
+        min-height: 34px !important;
+        height: 34px !important;
         letter-spacing: 0.5px !important;
         transition: all 0.25s ease !important;
         box-shadow: none !important;
@@ -334,10 +352,10 @@ CUSTOM_CSS: str = """
     }
     div.stButton > button[key*="btn_footer_feedback_left"]:hover,
     div.stButton > button[key*="btn_footer_admin_right"]:hover {
-        background: rgba(56, 189, 248, 0.15) !important;
+        background: rgba(56, 189, 248, 0.2) !important;
         border-color: #38BDF8 !important;
         color: #38BDF8 !important;
-        box-shadow: 0 0 10px rgba(56, 189, 248, 0.25) !important;
+        box-shadow: 0 0 12px rgba(56, 189, 248, 0.3) !important;
     }
 
     /* 黃色系維護公告橫幅 */
@@ -345,32 +363,33 @@ CUSTOM_CSS: str = """
         border: 1px solid rgba(245, 158, 11, 0.6);
         border-left: 5px solid #F59E0B;
         border-radius: 10px;
-        padding: 8px 12px;
-        margin-bottom: 0.8rem;
-        background: rgba(245, 158, 11, 0.12);
+        padding: 10px 14px;
+        margin-bottom: 1rem;
+        background: rgba(245, 158, 11, 0.15);
         backdrop-filter: blur(8px);
         color: #FDE68A;
-        font-size: 11.5px;
+        font-size: 12px;
         font-weight: 700;
         letter-spacing: 0.5px;
+        font-family: monospace;
     }
 
     .user-maint-banner {
-        border: 1px solid rgba(245, 158, 11, 0.45);
+        border: 1px solid rgba(245, 158, 11, 0.5);
         border-left: 5px solid #F59E0B;
         border-radius: 12px;
-        padding: 14px 16px;
-        margin-top: 10px;
-        margin-bottom: 14px;
-        background: radial-gradient(circle at 50% 0%, rgba(69, 41, 10, 0.6) 0%, rgba(24, 18, 11, 0.75) 100%);
+        padding: 14px 18px;
+        margin-top: 12px;
+        margin-bottom: 16px;
+        background: radial-gradient(circle at 50% 0%, rgba(69, 41, 10, 0.7) 0%, rgba(24, 18, 11, 0.85) 100%);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
         text-align: center;
     }
     .user-maint-title {
         color: #FDE68A;
-        font-size: 11px;
+        font-size: 11.5px;
         font-weight: 800;
         letter-spacing: 1.2px;
         font-family: monospace;
@@ -384,52 +403,53 @@ CUSTOM_CSS: str = """
         letter-spacing: 0.5px;
         font-family: monospace;
         margin-top: 4px;
-        opacity: 0.85;
+        opacity: 0.9;
     }
 
     .section-header-box { 
-        background: rgba(30, 41, 59, 0.45); 
+        background: rgba(30, 41, 59, 0.6); 
         backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.08); border-left: 4px solid #3B82F6; border-radius: 12px; padding: 10px 14px !important; margin-top: 8px !important; margin-bottom: 10px !important; 
+        border: 1px solid rgba(255, 255, 255, 0.08); border-left: 4px solid #38BDF8; border-radius: 10px; padding: 10px 14px !important; margin-top: 10px !important; margin-bottom: 12px !important; 
     }
-    .section-title { color: #F8FAFC; font-size: 14px !important; font-weight: 700; margin: 0; }
-    .section-subtitle { color: #94A3B8; font-size: 9.5px !important; font-weight: 500; text-transform: uppercase; font-family: monospace; }
+    .section-title { color: #F8FAFC; font-size: 14px !important; font-weight: 700; margin: 0; font-family: monospace; }
+    .section-subtitle { color: #94A3B8; font-size: 10px !important; font-weight: 600; text-transform: uppercase; font-family: monospace; letter-spacing: 0.5px; }
 
     .integrated-crew-box {
         width: 100% !important;
         box-sizing: border-box !important;
-        background: rgba(30, 41, 59, 0.75);
+        background: rgba(30, 41, 59, 0.8);
         backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(56, 189, 248, 0.25);
+        border: 1px solid rgba(56, 189, 248, 0.3);
         border-bottom: none !important;
         border-left: 4px solid #10B981;
         border-top-left-radius: 12px;
         border-top-right-radius: 12px;
         border-bottom-left-radius: 0px !important;
         border-bottom-right-radius: 0px !important;
-        padding: 12px 12px 8px 12px;
+        padding: 12px 14px 8px 14px;
         margin-bottom: 0px !important;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
     }
     .integrated-crew-box:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(56, 189, 248, 0.2) !important;
-        border-color: rgba(56, 189, 248, 0.5) !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45), 0 0 15px rgba(56, 189, 248, 0.2) !important;
+        border-color: rgba(56, 189, 248, 0.6) !important;
     }
 
     .compact-name {
         font-size: 15px !important;
         font-weight: 800 !important;
         color: #F8FAFC !important;
+        font-family: monospace;
     }
     .badge-group {
         display: flex;
-        gap: 4px;
+        gap: 6px;
         align-items: center;
         flex-wrap: wrap;
     }
-    /* 紅色系警示徽章 */
+    /* 紅色系警示徽章：明確警告/超時/異常 */
     .long-badge {
         background: rgba(239, 68, 68, 0.2) !important;
         color: #F87171 !important;
@@ -454,11 +474,17 @@ CUSTOM_CSS: str = """
     }
 
     div.stButton > button, div.stFormSubmitButton > button { 
-        font-weight: 700 !important; padding: 0.4rem 0.8rem !important; border-radius: 0.5rem !important; 
-        background: rgba(30, 41, 59, 0.6) !important; 
-        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        font-weight: 700 !important; padding: 0.5rem 1rem !important; border-radius: 0.5rem !important; 
+        background: rgba(30, 41, 59, 0.75) !important; 
+        border: 1px solid rgba(56, 189, 248, 0.3) !important;
         color: #38BDF8 !important; width: 100% !important; 
         transition: all 0.2s ease !important; letter-spacing: 0.5px; font-family: monospace;
+    }
+    div.stButton > button:hover {
+        background: rgba(56, 189, 248, 0.2) !important;
+        border-color: #38BDF8 !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 0 12px rgba(56, 189, 248, 0.25) !important;
     }
 
     div.stButton > button[key*="win_btn_"],
@@ -468,29 +494,31 @@ CUSTOM_CSS: str = """
         border-bottom-left-radius: 12px !important;
         border-bottom-right-radius: 12px !important;
         border-top: 1px dashed rgba(255, 255, 255, 0.1) !important;
-        background: rgba(15, 23, 42, 0.85) !important;
+        background: rgba(15, 23, 42, 0.9) !important;
         margin-top: 0px !important;
     }
 
     div[data-baseweb="tab-list"] {
         gap: 8px !important;
-        background: rgba(15, 23, 42, 0.5) !important;
+        background: rgba(15, 23, 42, 0.6) !important;
         padding: 6px !important;
         border-radius: 12px !important;
-        border: 1px solid rgba(56, 189, 248, 0.2) !important;
+        border: 1px solid rgba(56, 189, 248, 0.25) !important;
     }
     button[data-baseweb="tab"] {
         border-radius: 8px !important;
         color: #94A3B8 !important;
         font-weight: 700 !important;
-        font-size: 12.5px !important;
-        padding: 8px 16px !important;
+        font-size: 13px !important;
+        padding: 8px 18px !important;
         background: transparent !important;
+        font-family: monospace !important;
     }
     button[aria-selected="true"] {
-        background: rgba(56, 189, 248, 0.2) !important;
+        background: rgba(56, 189, 248, 0.25) !important;
         color: #38BDF8 !important;
-        border: 1px solid rgba(56, 189, 248, 0.4) !important;
+        border: 1px solid rgba(56, 189, 248, 0.5) !important;
+        box-shadow: 0 0 10px rgba(56, 189, 248, 0.2) !important;
     }
 </style>
 """
