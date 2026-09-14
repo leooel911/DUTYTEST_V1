@@ -77,15 +77,40 @@ TRANSPORT_PERIODS: Dict[str, str] = {
 
 TITLE: str = "TRAIN CREW DUTY CALENDAR"
 
-# 預設系統通行密碼預設值[cite: 2]
+# 預設系統通行密碼預設值（當 json 尚未設定時備援）[cite: 2]
 ADMIN_PASSWORD: str = "Lf090000"
 CREW_ACCESS_PASSWORD: str = "0"
 
 # 完整通用請假代碼集[cite: 2]
 LEAVE_CODES: List[str] = [
-    "PAY", "CMP", "FAC", "FAC1", "FPL", "HPS", "HPS1", "LEV", "LU", "LUP", 
-    "LUTS", "MAT", "ML", "MLP", "MTR", "NHS", "NHS1", "NHS2", "NTD", "OPI", 
-    "PAT", "PAY1", "RCL", "TRN", "UNP", "UNP1", "UNP2", "WRSL",
+    "PAY",
+    "CMP",
+    "FAC",
+    "FAC1",
+    "FPL",
+    "HPS",
+    "HPS1",
+    "LEV",
+    "LU",
+    "LUP",
+    "LUTS",
+    "MAT",
+    "ML",
+    "MLP",
+    "MTR",
+    "NHS",
+    "NHS1",
+    "NHS2",
+    "NTD",
+    "OPI",
+    "PAT",
+    "PAY1",
+    "RCL",
+    "TRN",
+    "UNP",
+    "UNP1",
+    "UNP2",
+    "WRSL",
 ]
 
 # 班表圖像渲染色調定義[cite: 2]
@@ -101,11 +126,11 @@ C_TOWN_BG: str = "#CBD5E1"
 C_DO_TXT: str = "#881337"
 C_PAY_TXT: str = "#9A3412"
 C_HOLI_TXT: str = "#7C2D12"
-C_OT_TXT: str = "#EF4444"       # 示警紅
+C_OT_TXT: str = "#991B1B"
 C_NOTE_TXT: str = "#4C1D95"
 C_TOWN_TXT: str = "#000000"
 
-# 全站 CSS 美化樣式（質感升級：統一採用精準紅與黃色維修色系）[cite: 2]
+# 全站 CSS 美化樣式（已優化文字框顏色與對比）[cite: 2]
 CUSTOM_CSS: str = """
 <style>
     header[data-testid="stHeader"] { background: transparent !important; }
@@ -155,7 +180,7 @@ CUSTOM_CSS: str = """
         min-height: 42px !important;
     }
 
-    /* 文字輸入框與文字域 */
+    /* 修正文字輸入框背景與文字顏色，避免發生背景或文字變黑看不見的問題 */
     div[data-testid="stTextInput"] div[data-baseweb="input"],
     div[data-testid="stTextArea"] div[data-baseweb="textarea"] {
         background: rgba(15, 23, 42, 0.85) !important;
@@ -194,7 +219,6 @@ CUSTOM_CSS: str = """
     }
     div[data-baseweb="select"]:hover > div { border-color: #38BDF8 !important; }
 
-    /* 單選按鈕 (Radio Buttons) 優化：無 Emoji，工業風格質感 */
     div[data-testid="stElementContainer"]:has(div[data-testid="stRadio"]),
     div[data-testid="stRadio"],
     div[data-testid="stRadio"] > div,
@@ -284,20 +308,12 @@ CUSTOM_CSS: str = """
     .main-title { color: #F8FAFC !important; font-size: 16px !important; font-weight: 800; letter-spacing: 1.2px; margin: 0; font-family: monospace; }
     .title-subtitle { color: #94A3B8; font-size: 10px !important; font-weight: 600; letter-spacing: 0.8px; font-family: monospace; margin-top: 3px; }
 
-    /* 黃色維修色調 Banner 規範 */
     .test-env-banner {
-        border: 1px solid rgba(245, 158, 11, 0.5); 
-        border-left: 5px solid #F59E0B;
-        border-radius: 10px; 
-        padding: 8px 12px !important; 
-        margin-bottom: 0.8rem !important;
-        text-align: center; 
-        background: rgba(245, 158, 11, 0.12); 
-        backdrop-filter: blur(12px); 
-        font-family: monospace;
+        border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 10px; padding: 6px 10px !important; margin-bottom: 0.8rem !important;
+        text-align: center; background: rgba(39, 28, 12, 0.55); backdrop-filter: blur(12px); font-family: monospace;
     }
     .test-env-title { color: #FDE68A; font-size: 11px !important; font-weight: 800; letter-spacing: 1px; }
-    .test-env-sub { color: #FCD34D; font-size: 9.5px !important; font-weight: 500; opacity: 0.9; margin-top: 2px; }
+    .test-env-sub { color: #FCD34D; font-size: 9.5px !important; font-weight: 500; opacity: 0.85; margin-top: 1px; }
 
     div.stButton > button[key*="btn_footer_feedback_left"],
     div.stButton > button[key*="btn_footer_admin_right"] {
@@ -323,16 +339,15 @@ CUSTOM_CSS: str = """
         box-shadow: 0 0 10px rgba(56, 189, 248, 0.25) !important;
     }
 
-    /* 紅色示警色調專用框架 */
     .admin-maint-banner {
-        border: 1px solid rgba(239, 68, 68, 0.6);
-        border-left: 5px solid #EF4444;
+        border: 1px solid rgba(245, 158, 11, 0.6);
+        border-left: 5px solid #F59E0B;
         border-radius: 10px;
         padding: 8px 12px;
         margin-bottom: 0.8rem;
-        background: rgba(239, 68, 68, 0.12);
+        background: rgba(245, 158, 11, 0.12);
         backdrop-filter: blur(8px);
-        color: #FCA5A5;
+        color: #FDE68A;
         font-size: 11.5px;
         font-weight: 700;
         letter-spacing: 0.5px;
