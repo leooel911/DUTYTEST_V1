@@ -19,7 +19,7 @@ from modules.utils import (
 )
 
 # ---------------------------------------------------------
-# 載入全域動態設定
+# 載入全域動態設定 (每次 Rerun 時重新載入最新設定)
 # ---------------------------------------------------------
 sys_cfg = load_system_config()
 ADMIN_PASS_CODE = sys_cfg.get("admin_password") or ADMIN_PASSWORD
@@ -58,7 +58,7 @@ if "current_unit" not in st.session_state:
 
 
 # =========================================================
-# 前置授權碼門戶檢查
+# 前置授權碼門戶檢查（消費者介面：無裝飾貼圖，嚴格驗證）
 # =========================================================
 is_authed = st.session_state.get("authenticated", False)
 is_admin_authed = st.session_state.get("admin_logged_in", False)
