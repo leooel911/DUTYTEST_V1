@@ -130,7 +130,7 @@ C_OT_TXT: str = "#EF4444"
 C_NOTE_TXT: str = "#4C1D95"
 C_TOWN_TXT: str = "#000000"
 
-# 全站專業級 CSS 美化樣式（包含 Slider 顏色覆寫為藍色系）
+# 全站專業級 CSS 美化樣式
 CUSTOM_CSS: str = """
 <style>
     header[data-testid="stHeader"] { background: transparent !important; }
@@ -294,13 +294,12 @@ CUSTOM_CSS: str = """
         font-weight: 800 !important;
     }
 
-    /* 覆寫 Slider 顏色改為藍色系 (#38BDF8)，移除原本主題的紅色 */
+    /* 強制將 Slider / Select Slider 的選取區間與按鈕改為科技藍 (#38BDF8) */
     div[data-baseweb="slider"] div[role="slider"] {
         background-color: #38BDF8 !important;
         border-color: #38BDF8 !important;
     }
-    div[data-baseweb="slider"] div[data-testid="stSliderBar"],
-    div[data-baseweb="slider"] div > div > div > div {
+    div[data-baseweb="slider"] div > div > div {
         background-color: #38BDF8 !important;
     }
 
