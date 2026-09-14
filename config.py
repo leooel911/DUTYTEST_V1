@@ -6,8 +6,9 @@ CREW_ACCESS_PASSWORD = "your_crew_password"
 
 # 系統與模組所需參數
 FEEDBACK_IMG_DIR = "feedback_images"
-LEAVE_CODES = []  # 請依您的專案需求保留原本的內容
-UNITS = []        # 請依您的專案需求保留原本的內容
+LEAVE_CODES = []
+UNITS = []
+FONT_PATH = "NotoSansTC.ttf"  # 專案中用於繪圖的字型檔
 
 # 顏色常數
 C_DO_TXT = "#881337"
