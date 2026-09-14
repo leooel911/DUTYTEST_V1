@@ -2,20 +2,20 @@ import os
 from datetime import timedelta, timezone
 from typing import Any, Dict, List, Tuple
 
-# 時區設定
+# 時區設定[cite: 2]
 TAIWAN_TZ: timezone = timezone(timedelta(hours=8))
 
-# 基礎路徑定義
+# 基礎路徑定義[cite: 2]
 DATA_DIR: str = os.path.join(os.getcwd(), "data")
 FEEDBACK_IMG_DIR: str = os.path.join(DATA_DIR, "feedback_uploads")
 LOG_FILE: str = os.path.join(DATA_DIR, "activity_log.txt")
 
-# 全站統一設定檔與白名單路徑
+# 全站統一設定檔與白名單路徑[cite: 2]
 SYSTEM_CONFIG_FILE: str = os.path.join(DATA_DIR, "system_config.json")
 ALLOWED_USERS_FILE: str = os.path.join(DATA_DIR, "allowed_users.json")
 WHITELIST_FILE: str = os.path.join(DATA_DIR, "whitelist.json")
 
-# 各基地所屬單位班表與 Mapping 映射路徑設定
+# 各基地所屬單位班表與 Mapping 映射路徑設定[cite: 2]
 UNITS: Dict[str, Dict[str, Any]] = {
     "TTN": {
         "駕駛": os.path.join(DATA_DIR, "TTN_TD.xlsx"),
@@ -49,7 +49,7 @@ UNITS: Dict[str, Dict[str, Any]] = {
     },
 }
 
-# 國定假日標記對照字典
+# 國定假日標記對照字典[cite: 2]
 NATIONAL_HOLIDAYS: Dict[str, str] = {
     "1/1": "元旦",
     "2/16": "除夕",
@@ -68,7 +68,7 @@ NATIONAL_HOLIDAYS: Dict[str, str] = {
     "12/25": "行憲紀念日",
 }
 
-# 疏運期間標記字典
+# 疏運期間標記字典[cite: 2]
 TRANSPORT_PERIODS: Dict[str, str] = {
     "9/24-9/29": "中秋疏運",
     "10/4-10/10": "雙十節疏運",
@@ -77,11 +77,11 @@ TRANSPORT_PERIODS: Dict[str, str] = {
 
 TITLE: str = "TRAIN CREW DUTY CALENDAR"
 
-# 預設系統通行密碼預設值（當 json 尚未設定時備援）
+# 預設系統通行密碼預設值（當 json 尚未設定時備援）[cite: 2]
 ADMIN_PASSWORD: str = "Lf090000"
 CREW_ACCESS_PASSWORD: str = "0"
 
-# 完整通用請假代碼集
+# 完整通用請假代碼集[cite: 2]
 LEAVE_CODES: List[str] = [
     "PAY",
     "CMP",
@@ -113,7 +113,7 @@ LEAVE_CODES: List[str] = [
     "WRSL",
 ]
 
-# 班表圖像渲染色調定義
+# 班表圖像渲染色調定義[cite: 2]
 C_HDR: str = "#0F172A"
 C_BORDER: str = "#475569"
 C_EMPTY: str = "#F1F5F9"
@@ -130,7 +130,7 @@ C_OT_TXT: str = "#991B1B"
 C_NOTE_TXT: str = "#4C1D95"
 C_TOWN_TXT: str = "#000000"
 
-# 全站 CSS 美化樣式
+# 全站 CSS 美化樣式（已優化文字框顏色與對比）[cite: 2]
 CUSTOM_CSS: str = """
 <style>
     header[data-testid="stHeader"] { background: transparent !important; }
@@ -180,9 +180,10 @@ CUSTOM_CSS: str = """
         min-height: 42px !important;
     }
 
+    /* 修正文字輸入框背景與文字顏色，避免發生背景或文字變黑看不見的問題 */
     div[data-testid="stTextInput"] div[data-baseweb="input"],
     div[data-testid="stTextArea"] div[data-baseweb="textarea"] {
-        background: rgba(15, 23, 42, 0.75) !important;
+        background: rgba(15, 23, 42, 0.85) !important;
         border: 1px solid rgba(56, 189, 248, 0.35) !important;
         border-radius: 10px !important;
         padding: 2px 4px !important;
@@ -194,8 +195,14 @@ CUSTOM_CSS: str = """
         border: none !important;
         box-shadow: none !important;
         color: #F8FAFC !important;
+        -webkit-text-fill-color: #F8FAFC !important;
         padding: 6px 10px !important;
         font-family: monospace !important;
+    }
+    div[data-testid="stTextInput"] input::placeholder,
+    div[data-testid="stTextArea"] textarea::placeholder {
+        color: #94A3B8 !important;
+        -webkit-text-fill-color: #94A3B8 !important;
     }
     div[data-testid="stTextInput"] div[data-baseweb="input"]:focus-within,
     div[data-testid="stTextArea"] div[data-baseweb="textarea"]:focus-within {
@@ -205,9 +212,10 @@ CUSTOM_CSS: str = """
 
     div[data-baseweb="select"] { width: 100% !important; }
     div[data-baseweb="select"] > div {
-        background-color: rgba(15, 23, 42, 0.8) !important;
+        background-color: rgba(15, 23, 42, 0.85) !important;
         border: 1px solid rgba(56, 189, 248, 0.3) !important;
         border-radius: 10px !important;
+        color: #F8FAFC !important;
     }
     div[data-baseweb="select"]:hover > div { border-color: #38BDF8 !important; }
 
