@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Tuple
 # 時區設定
 TAIWAN_TZ: timezone = timezone(timedelta(hours=8))
 
-# 基礎路徑定義
+# 基礎路徑定義 (自動對應專案內的 data 資料夾)
 DATA_DIR: str = os.path.join(os.getcwd(), "data")
 FEEDBACK_IMG_DIR: str = os.path.join(DATA_DIR, "feedback_uploads")
 LOG_FILE: str = os.path.join(DATA_DIR, "activity_log.txt")
@@ -15,36 +15,36 @@ SYSTEM_CONFIG_FILE: str = os.path.join(DATA_DIR, "system_config.json")
 ALLOWED_USERS_FILE: str = os.path.join(DATA_DIR, "allowed_users.json")
 WHITELIST_FILE: str = os.path.join(DATA_DIR, "whitelist.json")
 
-# 各基地所屬單位班表與 Mapping 映射路徑設定
+# 各基地所屬單位班表與 Mapping 映射路徑設定 (對應你的最新版班表子資料夾架構)
 UNITS: Dict[str, Dict[str, Any]] = {
     "TTN": {
-        "駕駛": os.path.join(DATA_DIR, "TTN_TD.xlsx"),
-        "列車長": os.path.join(DATA_DIR, "TTN_TM.xlsx"),
-        "服勤員": os.path.join(DATA_DIR, "TTN_TA.xlsx"),
+        "駕駛": os.path.join(DATA_DIR, "TTN", "最新版班表", "TTN_TD.xlsx"),
+        "列車長": os.path.join(DATA_DIR, "TTN", "最新版班表", "TTN_TM.xlsx"),
+        "服勤員": os.path.join(DATA_DIR, "TTN", "最新版班表", "TTN_TA.xlsx"),
         "mapping": {
-            "駕駛": os.path.join(DATA_DIR, "TTN_shift_mapping_TD.xlsx"),
-            "列車長": os.path.join(DATA_DIR, "TTN_shift_mapping_TM.xlsx"),
-            "服勤員": os.path.join(DATA_DIR, "TTN_shift_mapping_TA.xlsx"),
+            "駕駛": os.path.join(DATA_DIR, "TTN", "最新版班表", "TTN_shift_mapping_TD.xlsx"),
+            "列車長": os.path.join(DATA_DIR, "TTN", "最新版班表", "TTN_shift_mapping_TM.xlsx"),
+            "服勤員": os.path.join(DATA_DIR, "TTN", "最新版班表", "TTN_shift_mapping_TA.xlsx"),
         },
     },
     "TTC": {
-        "駕駛": os.path.join(DATA_DIR, "TTC_TD.xlsx"),
-        "列車長": os.path.join(DATA_DIR, "TTC_TM.xlsx"),
-        "服勤員": os.path.join(DATA_DIR, "TTC_TA.xlsx"),
+        "駕駛": os.path.join(DATA_DIR, "TTC", "最新版班表", "TTC_TD.xlsx"),
+        "列車長": os.path.join(DATA_DIR, "TTC", "最新版班表", "TTC_TM.xlsx"),
+        "服勤員": os.path.join(DATA_DIR, "TTC", "最新版班表", "TTC_TA.xlsx"),
         "mapping": {
-            "駕駛": os.path.join(DATA_DIR, "TTC_shift_mapping_TD.xlsx"),
-            "列車長": os.path.join(DATA_DIR, "TTC_shift_mapping_TM.xlsx"),
-            "服勤員": os.path.join(DATA_DIR, "TTC_shift_mapping_TA.xlsx"),
+            "駕駛": os.path.join(DATA_DIR, "TTC", "最新版班表", "TTC_shift_mapping_TD.xlsx"),
+            "列車長": os.path.join(DATA_DIR, "TTC", "最新版班表", "TTC_shift_mapping_TM.xlsx"),
+            "服勤員": os.path.join(DATA_DIR, "TTC", "最新版班表", "TTC_shift_mapping_TA.xlsx"),
         },
     },
     "TTS": {
-        "駕駛": os.path.join(DATA_DIR, "TTS_TD.xlsx"),
-        "列車長": os.path.join(DATA_DIR, "TTS_TM.xlsx"),
-        "服勤員": os.path.join(DATA_DIR, "TTS_TA.xlsx"),
+        "駕駛": os.path.join(DATA_DIR, "TTS", "最新版班表", "TTS_TD.xlsx"),
+        "列車長": os.path.join(DATA_DIR, "TTS", "最新版班表", "TTS_TM.xlsx"),
+        "服勤員": os.path.join(DATA_DIR, "TTS", "最新版班表", "TTS_TA.xlsx"),
         "mapping": {
-            "駕駛": os.path.join(DATA_DIR, "TTS_shift_mapping_TD.xlsx"),
-            "列車長": os.path.join(DATA_DIR, "TTS_shift_mapping_TM.xlsx"),
-            "服勤員": os.path.join(DATA_DIR, "TTS_shift_mapping_TA.xlsx"),
+            "駕駛": os.path.join(DATA_DIR, "TTS", "最新版班表", "TTS_shift_mapping_TD.xlsx"),
+            "列車長": os.path.join(DATA_DIR, "TTS", "最新版班表", "TTS_shift_mapping_TM.xlsx"),
+            "服勤員": os.path.join(DATA_DIR, "TTS", "最新版班表", "TTS_shift_mapping_TA.xlsx"),
         },
     },
 }
