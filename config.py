@@ -2,20 +2,20 @@ import os
 from datetime import timedelta, timezone
 from typing import Any, Dict, List, Tuple
 
-# 時區設定[cite: 2]
+# 時區設定
 TAIWAN_TZ: timezone = timezone(timedelta(hours=8))
 
-# 基礎路徑定義[cite: 2]
+# 基礎路徑定義
 DATA_DIR: str = os.path.join(os.getcwd(), "data")
 FEEDBACK_IMG_DIR: str = os.path.join(DATA_DIR, "feedback_uploads")
 LOG_FILE: str = os.path.join(DATA_DIR, "activity_log.txt")
 
-# 全站統一設定檔與白名單路徑[cite: 2]
+# 全站統一設定檔與白名單路徑
 SYSTEM_CONFIG_FILE: str = os.path.join(DATA_DIR, "system_config.json")
 ALLOWED_USERS_FILE: str = os.path.join(DATA_DIR, "allowed_users.json")
 WHITELIST_FILE: str = os.path.join(DATA_DIR, "whitelist.json")
 
-# 各基地所屬單位班表與 Mapping 映射路徑設定[cite: 2]
+# 各基地所屬單位班表與 Mapping 映射路徑設定
 UNITS: Dict[str, Dict[str, Any]] = {
     "TTN": {
         "駕駛": os.path.join(DATA_DIR, "TTN_TD.xlsx"),
@@ -49,7 +49,7 @@ UNITS: Dict[str, Dict[str, Any]] = {
     },
 }
 
-# 國定假日標記對照字典[cite: 2]
+# 國定假日標記對照字典
 NATIONAL_HOLIDAYS: Dict[str, str] = {
     "1/1": "元旦",
     "2/16": "除夕",
@@ -68,7 +68,7 @@ NATIONAL_HOLIDAYS: Dict[str, str] = {
     "12/25": "行憲紀念日",
 }
 
-# 疏運期間標記字典[cite: 2]
+# 疏運期間標記字典
 TRANSPORT_PERIODS: Dict[str, str] = {
     "9/24-9/29": "中秋疏運",
     "10/4-10/10": "雙十節疏運",
@@ -77,43 +77,18 @@ TRANSPORT_PERIODS: Dict[str, str] = {
 
 TITLE: str = "TRAIN CREW DUTY CALENDAR"
 
-# 預設系統通行密碼預設值（當 json 尚未設定時備援）[cite: 2]
+# 預設系統通行密碼預設值
 ADMIN_PASSWORD: str = "Lf090000"
 CREW_ACCESS_PASSWORD: str = "0"
 
-# 完整通用請假代碼集[cite: 2]
+# 完整通用請假代碼集
 LEAVE_CODES: List[str] = [
-    "PAY",
-    "CMP",
-    "FAC",
-    "FAC1",
-    "FPL",
-    "HPS",
-    "HPS1",
-    "LEV",
-    "LU",
-    "LUP",
-    "LUTS",
-    "MAT",
-    "ML",
-    "MLP",
-    "MTR",
-    "NHS",
-    "NHS1",
-    "NHS2",
-    "NTD",
-    "OPI",
-    "PAT",
-    "PAY1",
-    "RCL",
-    "TRN",
-    "UNP",
-    "UNP1",
-    "UNP2",
-    "WRSL",
+    "PAY", "CMP", "FAC", "FAC1", "FPL", "HPS", "HPS1", "LEV", "LU", "LUP", 
+    "LUTS", "MAT", "ML", "MLP", "MTR", "NHS", "NHS1", "NHS2", "NTD", "OPI", 
+    "PAT", "PAY1", "RCL", "TRN", "UNP", "UNP1", "UNP2", "WRSL",
 ]
 
-# 班表圖像渲染色調定義[cite: 2]
+# 班表圖像渲染色調定義
 C_HDR: str = "#0F172A"
 C_BORDER: str = "#475569"
 C_EMPTY: str = "#F1F5F9"
@@ -126,11 +101,11 @@ C_TOWN_BG: str = "#CBD5E1"
 C_DO_TXT: str = "#881337"
 C_PAY_TXT: str = "#9A3412"
 C_HOLI_TXT: str = "#7C2D12"
-C_OT_TXT: str = "#991B1B"
+C_OT_TXT: str = "#EF4444"      # 紅色示警
 C_NOTE_TXT: str = "#4C1D95"
 C_TOWN_TXT: str = "#000000"
 
-# 全站 CSS 美化樣式（已優化文字框顏色與對比）[cite: 2]
+# 全站 CSS 美化樣式（落實紅警示、黃維修、零貼圖規範）
 CUSTOM_CSS: str = """
 <style>
     header[data-testid="stHeader"] { background: transparent !important; }
@@ -180,7 +155,7 @@ CUSTOM_CSS: str = """
         min-height: 42px !important;
     }
 
-    /* 修正文字輸入框背景與文字顏色，避免發生背景或文字變黑看不見的問題 */
+    /* 文字輸入框與文字域優化 */
     div[data-testid="stTextInput"] div[data-baseweb="input"],
     div[data-testid="stTextArea"] div[data-baseweb="textarea"] {
         background: rgba(15, 23, 42, 0.85) !important;
@@ -286,16 +261,16 @@ CUSTOM_CSS: str = """
         font-weight: 800 !important;
     }
 
-    @keyframes online-green-pulse {
-        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6); }
-        70% { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
-        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+    @keyframes online-pulse {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.6); }
+        70% { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(56, 189, 248, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
     }
 
-    .online-dot {
-        width: 6px; height: 6px; background-color: #4ADE80; border-radius: 50%;
-        display: inline-block; animation: online-green-pulse 2.5s infinite ease-in-out;
-        box-shadow: 0 0 8px #4ADE80; margin: 0 5px; vertical-align: middle;
+    .status-dot {
+        width: 6px; height: 6px; background-color: #38BDF8; border-radius: 50%;
+        display: inline-block; animation: online-pulse 2.5s infinite ease-in-out;
+        box-shadow: 0 0 8px #38BDF8; margin: 0 5px; vertical-align: middle;
     }
 
     .header-container { 
@@ -308,12 +283,34 @@ CUSTOM_CSS: str = """
     .main-title { color: #F8FAFC !important; font-size: 16px !important; font-weight: 800; letter-spacing: 1.2px; margin: 0; font-family: monospace; }
     .title-subtitle { color: #94A3B8; font-size: 10px !important; font-weight: 600; letter-spacing: 0.8px; font-family: monospace; margin-top: 3px; }
 
-    .test-env-banner {
-        border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 10px; padding: 6px 10px !important; margin-bottom: 0.8rem !important;
-        text-align: center; background: rgba(39, 28, 12, 0.55); backdrop-filter: blur(12px); font-family: monospace;
+    /* 黃色：系統維護色調 */
+    .maintenance-banner {
+        border: 1px solid rgba(245, 158, 11, 0.5); 
+        border-left: 5px solid #F59E0B;
+        border-radius: 10px; 
+        padding: 8px 12px !important; 
+        margin-bottom: 0.8rem !important;
+        background: rgba(245, 158, 11, 0.12); 
+        backdrop-filter: blur(12px); 
+        font-family: monospace;
     }
-    .test-env-title { color: #FDE68A; font-size: 11px !important; font-weight: 800; letter-spacing: 1px; }
-    .test-env-sub { color: #FCD34D; font-size: 9.5px !important; font-weight: 500; opacity: 0.85; margin-top: 1px; }
+    .maintenance-title { color: #FDE68A; font-size: 11px !important; font-weight: 800; letter-spacing: 1px; }
+    .maintenance-sub { color: #FCD34D; font-size: 9.5px !important; font-weight: 500; opacity: 0.9; margin-top: 1px; }
+
+    /* 紅色：系統示警/錯誤色調 */
+    .alert-banner {
+        border: 1px solid rgba(239, 68, 68, 0.6);
+        border-left: 5px solid #EF4444;
+        border-radius: 10px;
+        padding: 8px 12px !important;
+        margin-bottom: 0.8rem !important;
+        background: rgba(239, 68, 68, 0.15);
+        backdrop-filter: blur(12px);
+        font-family: monospace;
+        color: #FCA5A5;
+        font-size: 11.5px;
+        font-weight: 700;
+    }
 
     div.stButton > button[key*="btn_footer_feedback_left"],
     div.stButton > button[key*="btn_footer_admin_right"] {
@@ -339,52 +336,6 @@ CUSTOM_CSS: str = """
         box-shadow: 0 0 10px rgba(56, 189, 248, 0.25) !important;
     }
 
-    .admin-maint-banner {
-        border: 1px solid rgba(245, 158, 11, 0.6);
-        border-left: 5px solid #F59E0B;
-        border-radius: 10px;
-        padding: 8px 12px;
-        margin-bottom: 0.8rem;
-        background: rgba(245, 158, 11, 0.12);
-        backdrop-filter: blur(8px);
-        color: #FDE68A;
-        font-size: 11.5px;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-    }
-
-    .user-maint-banner {
-        border: 1px solid rgba(245, 158, 11, 0.45);
-        border-left: 5px solid #F59E0B;
-        border-radius: 12px;
-        padding: 14px 16px;
-        margin-top: 10px;
-        margin-bottom: 14px;
-        background: radial-gradient(circle at 50% 0%, rgba(69, 41, 10, 0.6) 0%, rgba(24, 18, 11, 0.75) 100%);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-        text-align: center;
-    }
-    .user-maint-title {
-        color: #FDE68A;
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 1.2px;
-        font-family: monospace;
-        text-transform: uppercase;
-        margin-bottom: 4px;
-    }
-    .user-maint-sub {
-        color: #CBD5E1;
-        font-size: 11px;
-        font-weight: 500;
-        letter-spacing: 0.5px;
-        font-family: monospace;
-        margin-top: 4px;
-        opacity: 0.85;
-    }
-
     .section-header-box { 
         background: rgba(30, 41, 59, 0.45); 
         backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -392,82 +343,6 @@ CUSTOM_CSS: str = """
     }
     .section-title { color: #F8FAFC; font-size: 14px !important; font-weight: 700; margin: 0; }
     .section-subtitle { color: #94A3B8; font-size: 9.5px !important; font-weight: 500; text-transform: uppercase; font-family: monospace; }
-
-    .integrated-crew-box {
-        width: 100% !important;
-        box-sizing: border-box !important;
-        background: rgba(30, 41, 59, 0.75);
-        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(56, 189, 248, 0.25);
-        border-bottom: none !important;
-        border-left: 4px solid #10B981;
-        border-top-left-radius: 12px;
-        border-top-right-radius: 12px;
-        border-bottom-left-radius: 0px !important;
-        border-bottom-right-radius: 0px !important;
-        padding: 12px 12px 8px 12px;
-        margin-bottom: 0px !important;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
-    }
-    .integrated-crew-box:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(56, 189, 248, 0.2) !important;
-        border-color: rgba(56, 189, 248, 0.5) !important;
-    }
-
-    .compact-name {
-        font-size: 15px !important;
-        font-weight: 800 !important;
-        color: #F8FAFC !important;
-    }
-    .badge-group {
-        display: flex;
-        gap: 4px;
-        align-items: center;
-        flex-wrap: wrap;
-    }
-    .long-badge {
-        background: rgba(225, 29, 72, 0.2) !important;
-        color: #FB7185 !important;
-        border: 1px solid rgba(244, 63, 94, 0.5) !important;
-        border-radius: 6px !important;
-        padding: 2px 6px !important;
-        font-size: 10.5px !important;
-        font-weight: 800 !important;
-        font-family: monospace !important;
-        line-height: 1.2 !important;
-    }
-    .non-line-badge {
-        background: rgba(148, 163, 184, 0.2) !important;
-        color: #CBD5E1 !important;
-        border: 1px solid rgba(148, 163, 184, 0.4) !important;
-        border-radius: 6px !important;
-        padding: 2px 6px !important;
-        font-size: 10.5px !important;
-        font-weight: 800 !important;
-        font-family: monospace !important;
-        line-height: 1.2 !important;
-    }
-
-    div.stButton > button, div.stFormSubmitButton > button { 
-        font-weight: 700 !important; padding: 0.4rem 0.8rem !important; border-radius: 0.5rem !important; 
-        background: rgba(30, 41, 59, 0.6) !important; 
-        border: 1px solid rgba(255, 255, 255, 0.12) !important;
-        color: #38BDF8 !important; width: 100% !important; 
-        transition: all 0.2s ease !important; letter-spacing: 0.5px; font-family: monospace;
-    }
-
-    div.stButton > button[key*="win_btn_"],
-    div.stButton > button[key*="ex_btn_"] {
-        border-top-left-radius: 0px !important;
-        border-top-right-radius: 0px !important;
-        border-bottom-left-radius: 12px !important;
-        border-bottom-right-radius: 12px !important;
-        border-top: 1px dashed rgba(255, 255, 255, 0.1) !important;
-        background: rgba(15, 23, 42, 0.85) !important;
-        margin-top: 0px !important;
-    }
 
     div[data-baseweb="tab-list"] {
         gap: 8px !important;
