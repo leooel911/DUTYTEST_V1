@@ -130,7 +130,8 @@ C_OT_TXT: str = "#EF4444"
 C_NOTE_TXT: str = "#4C1D95"
 C_TOWN_TXT: str = "#000000"
 
-# 全站專業級 CSS 美化樣式 (已精準針對輸入框與下拉選單背景進行深色化)
+# 全站專業級 CSS 美化樣式 (已將 Radio 調整為極簡、輕量、不佔空間的專業清單膠囊風格)
+# 全站專業級 CSS 美化樣式 (已加入彈出對話框內輸入框的深色防白化修正)
 CUSTOM_CSS: str = """
 <style>
     header[data-testid="stHeader"] { background: transparent !important; }
@@ -183,22 +184,28 @@ CUSTOM_CSS: str = """
     }
 
     /* ========================================================= */
-    /* 精準鎖定：徹底消除輸入框與下拉選單的白色背景底框 */
+    /* 強化版：全面覆蓋一般頁面與對話框 (Dialog) 內的輸入框與下拉選單 */
     /* ========================================================= */
-    .stTextInput > div > div > div {
+    .stTextInput > div > div > div,
+    .stSelectbox > div > div > div,
+    div[data-baseweb="input"],
+    div[data-baseweb="base-input"],
+    div[data-baseweb="select"] {
         background-color: #1E293B !important;
         border: 1px solid #475569 !important;
         border-radius: 8px !important;
+        color: #F8FAFC !important;
     }
     
-    .stSelectbox > div > div > div {
+    div[data-baseweb="textarea"] {
         background-color: #1E293B !important;
         border: 1px solid #475569 !important;
         border-radius: 8px !important;
     }
 
     div[data-testid="stTextInput"] input,
-    div[data-testid="stTextArea"] textarea {
+    div[data-testid="stTextArea"] textarea,
+    input, textarea {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
@@ -215,15 +222,63 @@ CUSTOM_CSS: str = """
     }
     
     .stTextInput > div > div > div:focus-within,
-    .stSelectbox > div > div > div:focus-within {
+    .stSelectbox > div > div > div:focus-within,
+    div[data-baseweb="input"]:focus-within {
         border-color: #38BDF8 !important;
         box-shadow: 0 0 12px rgba(56, 189, 248, 0.3) !important;
     }
 
-    /* 下拉選單展開後的彈出清單背景 */
     div[data-baseweb="popover"] div {
         background-color: #1E293B !important;
         color: #F8FAFC !important;
+    }
+
+    /* ========================================================= */
+    /* 專業化 UI：極簡、輕量、不佔空間的輕膠囊 Radio 按鈕         */
+    /* ========================================================= */
+    div[data-testid="stRadio"] {
+        background: transparent !important;
+        border: none !important;
+        padding: 0px !important;
+        box-shadow: none !important;
+    }
+    
+    div[data-testid="stRadio"] > div[role="radiogroup"] {
+        gap: 6px !important;
+    }
+    
+    div[data-testid="stRadio"] label {
+        background: rgba(30, 41, 59, 0.5) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 8px !important;
+        padding: 8px 12px !important;
+        margin: 0 !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    div[data-testid="stRadio"] label:hover {
+        background: rgba(56, 189, 248, 0.15) !important;
+        border-color: rgba(56, 189, 248, 0.4) !important;
+    }
+    
+    div[data-testid="stRadio"] label p {
+        color: #94A3B8 !important;
+        font-weight: 600 !important;
+        font-family: monospace !important;
+        font-size: 13px !important;
+        margin: 0 !important;
+    }
+    
+    div[data-testid="stRadio"] label:has(input:checked) {
+        background: rgba(30, 58, 138, 0.5) !important;
+        border-color: #38BDF8 !important;
+        box-shadow: 0 0 10px rgba(56, 189, 248, 0.2) !important;
+    }
+    
+    div[data-testid="stRadio"] label:has(input:checked) p {
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
     }
 
     div[data-baseweb="tab-list"] {
@@ -338,3 +393,11 @@ CUSTOM_CSS: str = """
     }
 </style>
 """
+# ==========================================
+# 📧 系統管理員郵件通知與 SMTP 參數設定
+# ==========================================
+SMTP_SERVER: str = "smtp.gmail.com"        # 例如使用 Gmail 伺服器
+SMTP_PORT: int = 587                       # TLS 連接埠
+SENDER_EMAIL: str = "leooel911@gmail.com"     # 填入你的 Google 帳號
+SENDER_PASSWORD: str = "aoisluiqatzsmlec"        # 填入 Gmail 的「應用程式密碼」(16碼)
+ADMIN_RECEIVE_EMAIL: str = "leooel911@gmail.com" # 收件人信箱
