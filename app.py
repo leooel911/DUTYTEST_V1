@@ -1,7 +1,17 @@
+import sys
+import os
 import streamlit as st
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
+
 from config import ADMIN_PASSWORD, CREW_ACCESS_PASSWORD, CUSTOM_CSS
 from modules.admin_views import render_admin_panel
-from modules.components import render_zoomable_image, show_feedback_modal
+from modules.components import (
+    render_zoomable_image,
+    render_feedback_hub_popover,
+)
 from modules.drawing import render_schedule_figure
 from modules.services import (
     authenticate_user,
@@ -42,8 +52,6 @@ if "user_input_field" not in st.session_state:
     st.session_state["user_input_field"] = DEFAULT_EMP_ID
 if "show_admin_login" not in st.session_state:
     st.session_state["show_admin_login"] = False
-if "show_feedback_dialog" not in st.session_state:
-    st.session_state["show_feedback_dialog"] = False
 if "inspect_emp_target" not in st.session_state:
     st.session_state["inspect_emp_target"] = None
 if "nav_mode" not in st.session_state:
@@ -88,7 +96,7 @@ if not is_authed and not is_admin_authed:
                 <div style="color: #FBBF24; font-weight: 800; margin-bottom: 4px;">IMPORTANT GUIDELINES:</div>
                 1. <b>排班依據</b>：本系統班表僅供個人調假與換班快篩參考，<b>即時班表務必以公司官方公告為準</b>。<br>
                 2. <b>資訊安全</b>：班表相關資料屬內部營運資訊，<b>請勿外流授權碼與班表截圖</b>。<br>
-                3. <b>權限與回報</b>：登入後若發現資料有誤，請透過頁尾<b>「問題回報與建議」</b>提出。
+                3. <b>權限與回報</b>：登入後若發現資料有誤，請透過頁尾功能提出。
             </div>
             """,
                 unsafe_allow_html=True,
@@ -307,16 +315,15 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# 頁尾：左側為互動式浮動彈出面板（內含回報與查詢分頁），右側為 ADMIN PANEL
 col_f1, col_f2 = st.columns(2)
 
 with col_f1:
-    if st.button(
-        "問題回報與建議",
-        key="btn_feedback_left_footer",
-        use_container_width=True,
-    ):
-        st.session_state["show_feedback_dialog"] = True
-        st.rerun()
+    render_feedback_hub_popover(
+        unit_label=st.session_state.get("current_unit", "TTN"),
+        user_id=st.session_state.get("login_user_id", ""),
+        is_admin=st.session_state.get("admin_logged_in", False)
+    )
 
 with col_f2:
     admin_btn_label = (
@@ -337,6 +344,3 @@ with col_f2:
         else:
             st.session_state["show_admin_login"] = True
         st.rerun()
-
-if st.session_state.get("show_feedback_dialog", False):
-    show_feedback_modal()
